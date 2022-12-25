@@ -1,0 +1,146 @@
+html,body { 
+    height:100%; 
+    min-width: 600px;
+}
+
+#root {
+    caret-color: transparent;
+    height:100%; 
+    background-color: #010409;
+    width: auto;
+}
+.titleDiv {
+    background-color: #21262c;
+    color: white;
+    position: fixed;
+    width: 100%;
+    height: 72px;
+    display:flex;
+}
+.title {
+    margin-left: 5%;
+    margin-top:10px;
+    font-size: 28px;
+    flex:1;
+}
+.newStreakButton {
+    flex:1;
+    max-width: 200px;
+    max-height: 50px;
+    margin-top: 11px;
+    margin-right: 60px;
+    background-color: #3d434a;
+    border: none;
+    border-radius: 30px;
+    color: aliceblue;
+    font-size: 18px;
+}
+.newStreakForm {
+    color: white;
+    background: #21262c;
+    width: 300px;
+    height: 0px;
+    position: absolute;
+    z-index: 1; 
+    top: 82px;
+    right: 10px;
+    border-radius: 10px;
+    caret-color: auto;
+    font-size: 20px;
+    overflow: hidden;
+    transition: height 0.5s;
+}
+.form {
+    padding: 20px;
+}
+.formText {
+    margin-top: 10px;
+    width: 100%;
+}
+.selectColor{
+    margin-top: 10px;
+}
+.formButton {
+    position: relative;
+    margin:25% 15%;
+    width: 70%;
+    height: 35px;
+    background-color: #3d434a;
+    border: none;
+    border-radius: 20px;
+    color: aliceblue;
+    font-size: 18px;
+}
+.streaksContainer {
+    padding-top: 82px;
+    background: #010409;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 150px;
+    
+}
+.streakDiv {
+    height: 100px;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 50px;
+    background: #A5C9CA;
+    margin-top: 10px;
+    color:white;
+    padding-left:35px;
+    padding-right:35px;
+    transition: height 1s;
+    overflow: hidden;
+}
+.collapsedStreak {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    transition: height 0.2s;
+    overflow: hidden;
+}
+.streakElements {
+    pointer-events: none;
+    margin: 0px;
+}
+.streakCount {
+    flex:1;
+    font-size: 66.5px;
+    min-width: 135px;
+}
+.streakTitle {
+    flex:6;
+    font-size: 30px;
+}
+.streakState {
+    flex: 3;
+    text-align: end;
+}
+.extendedStreak {
+    text-align: center;
+    padding: 15px;  
+}
+.exStreakName {
+    font-size: 40px;
+}
+.exStreakCount {
+    font-size: 100px;
+}
+.incrementButton {
+    pointer-events: visible;
+    font-size: 40px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 40px;
+    color: rgb(108, 153, 190);
+    width: 400px;
+    height: 80px;
+}
+.exStreakState {
+    font-size: 20px;
+}
+.sub {
+    font-size: 12px;
+}
+
