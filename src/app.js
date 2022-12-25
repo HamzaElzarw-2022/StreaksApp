@@ -2,8 +2,12 @@ import "./app.css";
 import { useState } from 'react';
 import "./program";
 
+//TODO
+//link font color in the list with element
+//fix the scroll and form problem
+
 //changes after last commit
-//
+//scroll to streak when it extend
 
 class streakObject 
 {
@@ -18,7 +22,12 @@ class streakObject
         console.log(this.count);
     }
 }
-let listOfStreaks = [];
+let listOfStreaks = [
+    new streakObject("The Streak", "#91D8E4"),
+    new streakObject("The Streak", "#A0E4CB"),
+    new streakObject("The Streak", "#D6E4E5"),
+    new streakObject("The Streak", "#FF9F9F")
+];
 
 let colors = [
     {value: "#91D8E4", color:"Blue", fontColor: "white"},
@@ -27,24 +36,23 @@ let colors = [
     {value: "#FF9F9F", color:"Peach", fontColor: "white"},
 ]
 
-//TODO
-//styling when width is less than 500px (smart phones)
-//figure out all properties of a streak and add to the newStreakForm
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 //main component that contain all components
 export default function App() {
 
-    const [streaksList, setStreaksList] = useState([]);
-    function renderContainer() 
-    {
-        function mapping(e, index) {
-            return Streak(e.name, e.color, e.count, index, renderContainer);
-        }
+    const [streaksList, setStreaksList] = useState(listOfStreaks.map(mapping));
+
+    function mapping(e, index) {
+        return Streak(e.name, e.color, e.count, index, renderContainer);
+    }
+    function renderContainer() {
         setStreaksList(listOfStreaks.map(mapping));
     }
     
     function formVisibility() 
     {
+        
         if (document.getElementById("newStreakForm").offsetHeight === 0) {
             document.getElementById("newStreakForm").style.height = "300px";
         }
@@ -136,16 +144,21 @@ function StreaksContainer ({list}) {
 //each block of streak
 let extendedStreak = "0";
 
-function extendStreak(e) 
+async function extendStreak(e) 
 {
     if(e.target.tagName !== "BUTTON") {
         if(e.target.offsetHeight !== 500 ) 
         {
-              document.getElementById(extendedStreak).style.height = "100px";
-              document.getElementById(extendedStreak).firstChild.style.height = "100px";
-          e.target.style.height = "500px";
-          extendedStreak = e.target.id;
-          e.target.firstChild.style.height = "0px";
+            
+            document.getElementById(extendedStreak).style.height = "100px";
+            document.getElementById(extendedStreak).firstChild.style.height = "100px";
+            e.target.style.height = "500px";
+            extendedStreak = e.target.id;
+            e.target.firstChild.style.height = "0px";
+            await delay(400);
+            console.log(e.target.getBoundingClientRect());
+            console.log(e.target.offsetTop);
+            window.scrollTo(0,e.target.offsetTop - 72 - 85);
         }
         else 
         {
@@ -177,7 +190,7 @@ function Streak(name, color, count, index, rendercounter)
             <div className="extendedStreak  streakElements" id="extendedData">
                 <p className="streakElements exStreakName">{name}</p>
                 <p className="streakElements exStreakCount" >{count}<span className="exsub">days</span></p>
-                <button className="incrementButton" type="button" onClick={handleClick}>Done</button>
+                <button className="incrementButton" type="button" style={{color: color}} onClick={handleClick}>Done</button>
                 <p className="streakElements exStreakState">next click in 24h</p>
             </div>
         </div>
