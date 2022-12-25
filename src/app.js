@@ -1,4 +1,4 @@
-import "./app4.css";
+import "./app.css";
 import { useState } from 'react';
 import "./program";
 
@@ -31,7 +31,7 @@ let listOfStreaks = [];
 
 //main component that contain all components
 
-export default function App4() {
+export default function App() {
 
     const [streaksList, setStreaksList] = useState([]);
     console.log("i was here");
