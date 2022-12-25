@@ -2,8 +2,11 @@ import "./app.css";
 import { useState } from 'react';
 import "./program";
 
-class streakObject {
+//changes after last commit
+//
 
+class streakObject 
+{
     constructor(name, color) {
         this.name= name;
         this.color= color;
@@ -14,27 +17,24 @@ class streakObject {
         this.count++;
         console.log(this.count);
     }
-
 }
-
 let listOfStreaks = [];
 
+let colors = [
+    {value: "#91D8E4", color:"Blue", fontColor: "white"},
+    {value: "#A0E4CB", color:"Green", fontColor: "white"},
+    {value: "#D6E4E5", color:"Gray", fontColor: "white"},
+    {value: "#FF9F9F", color:"Peach", fontColor: "white"},
+]
+
 //TODO
-//add the logo
-//desing the newStreakButton for better style
 //styling when width is less than 500px (smart phones)
 //figure out all properties of a streak and add to the newStreakForm
-//figure out how to add streaks using form and keep tracking using state
-//next phase:
-//the streak should grow dinamically on click and have the increment button, description, animation utility, and more
-//next,
 
 //main component that contain all components
-
 export default function App() {
 
     const [streaksList, setStreaksList] = useState([]);
-    console.log("i was here");
     function renderContainer() 
     {
         function mapping(e, index) {
@@ -91,11 +91,19 @@ function NewStreakForm({hideForm, render}) {
             hideForm();
 
             inputs.name = ('');
+            inputs.color = ('');
             document.getElementById("nameTextBox").value = "";
             document.getElementById("colorSelector").value = "";
         }
       }
 
+      function RenderColors(list) 
+      {
+        return list.map( function(color) {
+            return <option value={color.value} style={{background: color.value, color: color.fontColor}}>{color.color}</option>
+        } );
+      }
+      
     return (
         
         <div className="newStreakForm" id="newStreakForm" >
@@ -108,11 +116,8 @@ function NewStreakForm({hideForm, render}) {
                 <label className="selectColor">
                     <span>Streak Color:</span>
                         <select name="color" className="formText" id="colorSelector" onChange={e => inputs.color = (e.target.value)}>
-                            <option value="" disabled selected>Select your option</option>
-                            <option value="#91D8E4">Blue</option>
-                            <option value="#A0E4CB">green</option>
-                            <option value="#D6E4E5">gray</option>
-                            <option value="#FF9F9F">peach</option>
+                            <option value="" >Select your option</option>
+                            {RenderColors(colors)}
                         </select>
                 </label>
                 <button type="button" className="formButton" onClick={buttonClick}>make Streak</button>
@@ -130,29 +135,24 @@ function StreaksContainer ({list}) {
 }
 //each block of streak
 let extendedStreak = "0";
-//let isExtended = false;
+
 function extendStreak(e) 
 {
     if(e.target.tagName !== "BUTTON") {
         if(e.target.offsetHeight !== 500 ) 
         {
-         //if(isExtended)
               document.getElementById(extendedStreak).style.height = "100px";
               document.getElementById(extendedStreak).firstChild.style.height = "100px";
           e.target.style.height = "500px";
           extendedStreak = e.target.id;
           e.target.firstChild.style.height = "0px";
-         // isExtended= true;
-        
         }
-        else {
-           // isExtended=false;
+        else 
+        {
            e.target.style.height = "100px";
            e.target.firstChild.style.height = "100px";
-        
         }
     }
-    
 }
 function Streak(name, color, count, index, rendercounter) 
 {   
@@ -170,13 +170,13 @@ function Streak(name, color, count, index, rendercounter)
         onClick={e => extendStreak(e)}>
             <div className="collapsedStreak streakElements" id="collapsedData">
                 <p className="streakCount streakElements" >{count}<span className="sub">days</span></p>
-                <p className="streakTitle streakElements">{name}</p>
+                <p className="streakName streakElements">{name}</p>
                 <p className="streakState streakElements">next click in 24h</p>
             </div>
 
             <div className="extendedStreak  streakElements" id="extendedData">
                 <p className="streakElements exStreakName">{name}</p>
-                <p className="streakElements exStreakCount" >{count}<span className="sub">days</span></p>
+                <p className="streakElements exStreakCount" >{count}<span className="exsub">days</span></p>
                 <button className="incrementButton" type="button" onClick={handleClick}>Done</button>
                 <p className="streakElements exStreakState">next click in 24h</p>
             </div>
