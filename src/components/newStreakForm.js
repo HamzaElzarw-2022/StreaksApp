@@ -7,8 +7,8 @@ import * as backEnd from "../program";
 */
 function renderColors(list) 
     {
-        return list.map( function(color) {
-            return <option value={color.value} style={{background: color.value, color: color.fontColor}}>{color.color}</option>
+        return list.map( function(color, index) {
+            return <option key={index} value={index} style={{background: color.mainColor, color: color.fontColor}}>{color.color}</option>
         } );
     }
 
