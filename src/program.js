@@ -22,16 +22,3 @@ export let colors = [
     {color:"Purple", mainColor: "#DEBACE", fontColor: "#F2E5E5"},
     {color:"Yellow", mainColor: "#FFFFD0", fontColor: "#FF87B2"}
 ];
-
-
-//prototype
-function check(streakdate, currentdate, done) 
-{
-
-    if(currentdate - streakdate > 1)
-        return false;
-    if(currentdate - streakdate == 1)
-        if(!done)
-            return false;
-    return true;
-}
