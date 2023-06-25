@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import * as backEnd from "../program";
+
 /*
 *takes the list of color objects and maps it as
 *a select options then returns the array of jsx options
 *
 */
+
+let numberOfStreaks = 0;
+
 function renderColors(list) 
     {
         return list.map( function(color, index) {
@@ -13,7 +17,7 @@ function renderColors(list)
     }
 
 //the form that takes input from user in order to create a new streak
-export default function NewStreakForm({hideForm, render}) {
+export default function NewStreakForm({hideForm, list, setlist}) {
 
     const [inputs] = useState({name:"", color:""});
 
@@ -25,8 +29,10 @@ export default function NewStreakForm({hideForm, render}) {
             alert("please enter Color of the streak!"); }
         else 
         {
-            backEnd.listOfStreaks.push(new backEnd.streakObject(inputs.name, inputs.color));
-            render();
+            setlist([
+                ...list,
+                   new backEnd.streakObject(inputs.name, inputs.color, numberOfStreaks++)
+            ])
             hideForm();
 
             inputs.name = ('');

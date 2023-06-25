@@ -1,28 +1,37 @@
+
 export class streakObject 
 {
-    constructor(name, color) {
+    constructor(name, color, index) {
         this.name= name;
         this.color= color;
         this.count= 0;
+        this.index= index;
+
+        this.date= "00/00/0000";
+        this.done= false;
+        this.active= true;
     }
 
-    incrementCount() {
-        this.count++;
-        console.log(this.count);
-    }
 }
 
-export let listOfStreaks = [
-    new streakObject("The Streak", "#91D8E4"),
-    new streakObject("The Streak", "#A0E4CB"),
-    new streakObject("The Streak", "#D6E4E5"),
-    new streakObject("The Streak", "#FF9F9F")
+export let colors = [
+    {color:"Blue", mainColor: "#91D8E4", fontColor: "#EAFDFC"},
+    {color:"Green", mainColor: "#A0E4CB", fontColor: "white"},
+    {color:"Gray", mainColor: "#D6E4E5", fontColor: "#497174"},
+    {color:"Peach", mainColor: "#FF9F9F", fontColor: "#F2E5E5"},
+    {color:"Purple", mainColor: "#DEBACE", fontColor: "#F2E5E5"},
+    {color:"Yellow", mainColor: "#FFFFD0", fontColor: "#FF87B2"}
 ];
 
-export let colors = [
-    {value: "#91D8E4", color:"Blue", fontColor: "white"},
-    {value: "#A0E4CB", color:"Green", fontColor: "white"},
-    {value: "#D6E4E5", color:"Gray", fontColor: "white"},
-    {value: "#FF9F9F", color:"Peach", fontColor: "white"},
-]
 
+//prototype
+function check(streakdate, currentdate, done) 
+{
+
+    if(currentdate - streakdate > 1)
+        return false;
+    if(currentdate - streakdate == 1)
+        if(!done)
+            return false;
+    return true;
+}

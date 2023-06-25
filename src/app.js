@@ -1,6 +1,5 @@
 import "./app.css";
 import { useState } from 'react';
-import * as backEnd from "./program";
 import Streak from './components/streak.js';
 import NewStreakForm from './components/newStreakForm.js'
 
@@ -9,9 +8,11 @@ import NewStreakForm from './components/newStreakForm.js'
 //fix the scroll and form problem
 //read and write data
 //start the time 
+//drag and drop
 
-//changes after last commit
-//
+//changes after last commit:
+//removed list of streaks
+//usestate containes data which is mapped in the container
 
 function formVisibility() 
     {
@@ -24,26 +25,17 @@ function formVisibility()
     }
 //main component that contain all components
 export default function App() {
-
-    function mapping(e, index) {
-        return Streak(e.name, e.color, e.count, index, renderContainer);
-    }
-
-    const [streaksList, setStreaksList] = useState(backEnd.listOfStreaks.map(mapping));
-
-    function renderContainer() {
-        setStreaksList(backEnd.listOfStreaks.map(mapping));
-    }
     
+    const [streaksList2, setStreaksList2] = useState([]);
+
     return (
         <>
             <TitleBar showForm={formVisibility}/>
-            <NewStreakForm render={renderContainer} hideForm={formVisibility}/>
-            <StreaksContainer list={streaksList} />
+            <NewStreakForm hideForm={formVisibility} list={streaksList2} setlist={setStreaksList2}/>
+            <StreaksContainer list={streaksList2} setlist={setStreaksList2}/>
         </>
     );
 }
-
 //the bar at the top of the website
 function TitleBar({showForm}) {
 
@@ -55,10 +47,10 @@ function TitleBar({showForm}) {
     );
 }
 //the container that contains all the streaks inside
-function StreaksContainer ({list}) {
+function StreaksContainer ({list, setlist}) {
     return (
         <div className="streaksContainer">
-            {list}
+            {list.map((str) => {return Streak(str.name, str.color, str.count, str.index, {setlist, list})})}
         </div>
     );
 }

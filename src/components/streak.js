@@ -1,6 +1,5 @@
 import * as backEnd from "../program";
 
-
 //each block of streak
 let extendedStreak = "0";
 const delay = ms => new Promise(res => setTimeout(res, ms));
@@ -29,25 +28,28 @@ async function extendStreak(e)
     }
 }
 
-
-
-export default function Streak(name, colorIndex, count, index, rendercounter) 
+export default function Streak(name, colorIndex, count, index, {setlist, list}) 
 {   
-    const colorPalette = backEnd.colors[colorIndex]
-    function handleClick() {
-        backEnd.listOfStreaks[index].incrementCount();
-        console.log("increment was clicked");
-        console.log(index);
-        rendercounter();
-    }
     
+    const colorPalette = backEnd.colors[colorIndex]
+
+    function incrementCounter() 
+    {
+        //woooooow it worked (subhan Allah)
+        setlist(list.map((streak, place) => {
+            if(place === index) 
+                streak.count++;
+                return streak;
+            }))
+    }
+
     return (
         <div 
             key={index} id={index} className="streakDiv" 
             style={{background: colorPalette.mainColor, color: colorPalette.fontColor}} 
             onClick={e => extendStreak(e)}>
             <div className="collapsedStreak streakElements" id="collapsedData">
-                <p className="streakCount streakElements" >{count}<span className="sub">days</span></p>
+                <p className="streakCount streakElements" >{count}<span className="sub">days</span></p> 
                 <p className="streakName streakElements">{name}</p>
                 <p className="streakState streakElements">next click in 24h</p>
             </div>
@@ -55,7 +57,7 @@ export default function Streak(name, colorIndex, count, index, rendercounter)
             <div className="extendedStreak  streakElements" id="extendedData">
                 <p className="streakElements exStreakName">{name}</p>
                 <p className="streakElements exStreakCount" >{count}<span className="exsub">days</span></p>
-                <button className="incrementButton" type="button"  onClick={handleClick}
+                <button className="incrementButton" type="button"  onClick={incrementCounter}
                     style={{background: colorPalette.fontColor, color: colorPalette.mainColor}}>Done</button>
                 <p className="streakElements exStreakState">next click in 24h</p>
             </div>
