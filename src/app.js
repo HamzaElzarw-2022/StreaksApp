@@ -1,7 +1,8 @@
 import "./app.css";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Streak from './components/streak.js';
-import NewStreakForm from './components/newStreakForm.js'
+import NewStreakForm from './components/newStreakForm.js';
+import axios from 'axios';
 
 //TODO
 //link font color in the list with element
@@ -10,35 +11,42 @@ import NewStreakForm from './components/newStreakForm.js'
 //start the time 
 //drag and drop
 
-//changes after last commit:
-//removed list of streaks
-//usestate containes data which is mapped in the container
-
 function formVisibility() 
-    {
-        if (document.getElementById("newStreakForm").offsetHeight === 0) {
-            document.getElementById("newStreakForm").style.height = "300px";
-        }
-        else {
-            document.getElementById("newStreakForm").style.height = "0px";
-        }
+{
+    if (document.getElementById("newStreakForm").offsetHeight === 0) {
+        document.getElementById("newStreakForm").style.height = "380px";
     }
+    else {
+        document.getElementById("newStreakForm").style.height = "0px";
+    }
+}
+
 //main component that contain all components
 export default function App() {
-    
-    const [streaksList2, setStreaksList2] = useState([]);
+
+    const [streaksList, setStreaksList] = useState([]);
+
+    useEffect(()=>{
+
+        axios.get('http://localhost:8080/getStreaks')
+        .then(function(response) {
+            console.log(response);
+            setStreaksList(response.data);
+        })
+
+    }, []);
 
     return (
-        <>
+        <div>
             <TitleBar showForm={formVisibility}/>
-            <NewStreakForm hideForm={formVisibility} list={streaksList2} setlist={setStreaksList2}/>
-            <StreaksContainer list={streaksList2} setlist={setStreaksList2}/>
-        </>
+            <NewStreakForm hideForm={formVisibility} list={streaksList} setlist={setStreaksList}/>
+            <StreaksContainer list={streaksList} setlist={setStreaksList}/>
+        </div>
     );
 }
+
 //the bar at the top of the website
 function TitleBar({showForm}) {
-
     return (
         <div className= "titleDiv">
             <span className="title">🔥My Streaks</span> 
@@ -46,11 +54,12 @@ function TitleBar({showForm}) {
         </div>
     );
 }
-//the container that contains all the streaks inside
+
+//the container that includes all the streaks inside
 function StreaksContainer ({list, setlist}) {
     return (
         <div className="streaksContainer">
-            {list.map((str) => {return Streak(str.name, str.color, str.count, str.index, {setlist, list})})}
+            {list.map((str) => {return Streak(str, {setlist, list})})}
         </div>
     );
 }

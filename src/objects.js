@@ -1,17 +1,30 @@
 
+
+
+
 export class streakObject 
 {
-    constructor(name, color, index) {
-        this.name= name;
-        this.color= color;
-        this.count= 0;
-        this.index= index;
+  constructor(id, name, theme, roundUpdateTime) {
+    this.id= id;
+    this.name= name;
+    this.theme= theme;
+    this.roundUpdateTime = roundUpdateTime;
 
-        this.date= "00/00/0000";
-        this.done= false;
-        this.active= true;
-    }
+    this.count= 0;
+    this.dateCreated = new Date();
+    this.RoundEnd = new Date();
 
+    if(this.dateCreated.getHours() >= roundUpdateTime)
+      this.RoundEnd.setDate(this.dateCreated.getDate()+1);
+      
+    this.RoundEnd.setHours(roundUpdateTime);
+    this.RoundEnd.setMinutes(0);
+    this.RoundEnd.setSeconds(0);
+    this.RoundEnd.setMilliseconds(0);
+
+    this.done= false;
+    this.active= true;
+  }
 }
 
 export let colors = [

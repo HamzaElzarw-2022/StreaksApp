@@ -57,7 +57,16 @@ html,body {
     margin-top: 10px;
     width: 100%;
 }
-.selectColor{
+.formTime {
+    margin-top: 10px;
+    width: 60%;
+    margin-right: 5%
+}
+.formAmPm {
+    margin-top: 10px;
+    width: 35%;
+}
+.selectInput{
     margin-top: 10px;
 }
 .formButton {
