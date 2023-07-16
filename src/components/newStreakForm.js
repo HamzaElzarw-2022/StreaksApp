@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {streakObject, colors} from "../objects";
+import {colors} from "../objects";
 import axios from 'axios';
 
 /*
@@ -7,9 +7,9 @@ import axios from 'axios';
 *a select options then returns the array of jsx options
 *
 */
-function renderColors(list) 
+function renderColors(colorList) 
 {
-    return list.map( function(color, index) {
+    return colorList.map( function(color, index) {
         return <option key={index} value={index} style={{background: color.mainColor, color: color.fontColor}}>{color.color}</option>
     } );
 }
@@ -27,20 +27,20 @@ export default function NewStreakForm({hideForm, list, setlist}) {
         else if(inputs.color === "") { 
             alert("please enter Color of the streak!"); }
         else if(inputs.roundUpdateTime === -1) { 
-            alert("please enter Color of the streak!"); }
+            alert("please enter Round start time of the streak!"); }
         else 
         {
             if(inputs.ampm === "PM")
                 inputs.roundUpdateTime = inputs.roundUpdateTime + 12;
-            const newStreak = new streakObject(list.length, inputs.name, inputs.color ,inputs.roundUpdateTime);
 
-            axios.put('http://localhost:8080/newStreaks', newStreak).then((res) => {
-
-                    console.log(res.data)
-                    setlist([...list, newStreak])
-
-                }).catch((error) => {alert(error)});
-            
+            axios.put('http://localhost:8080/newStreaks', {
+                "name": inputs.name, 
+                "theme": inputs.color ,
+                "roundUpdateTime": inputs.roundUpdateTime
+            }).then((res) => {
+                console.log(res.data)
+                setlist([...list, res.data])
+            }).catch((error) => {alert(error)});
 
             hideForm();
             inputs.name = ('');

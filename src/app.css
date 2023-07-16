@@ -35,6 +35,33 @@ html,body {
     color: aliceblue;
     font-size: 18px;
 }
+.failedContainer {
+    padding-top: 100px;
+    display: flex;
+    justify-content: center;
+}
+.failedToLoad {
+    height: 50px;
+    font-size: 20px;
+    padding-top: 8px;
+    background-color: #21262c;
+    color: rgb(255, 67, 67);
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 25px;
+    
+}
+.reloadStreakbtn {
+    
+    margin-left: 5px;
+    padding: 2px 8px;
+    background-color: #3d434a;
+    border: none;
+    border-radius: 30px;
+    color: aliceblue;
+    font-size: 18px;
+}
 .newStreakForm {
     color: white;
     background: #21262c;
@@ -80,28 +107,81 @@ html,body {
     color: aliceblue;
     font-size: 18px;
 }
-.streaksContainer {
+.content {
     padding-top: 82px;
-    background: #010409;
+    padding-bottom: 150px;
+    background-color: #010409;
+    align-items: center;
+}
+.streaksContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-bottom: 150px;
-    
+    width: 80%;
+    margin: auto;
+    max-width: 800px;
+}
+.expiredSection {
+    width: 80%;
+    margin: auto;
+    max-width: 800px;
+    background-color: #111317;
+    margin-top: 20px;
+    height: auto;
+    border-radius: 10px;
+}
+.expiredStreaksContainer {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    margin: auto;
+    max-width: 800px;
+    height: 0px;
+    transition: height 0.5s;
+    overflow: hidden;
+}
+.toggleTriangle {
+    width: 15px;
+    margin-right: 10px;
+    transition: transform 0.5s;
+}
+.expiredLabel {
+    margin-left: 30px;
+    color:white;
+    font-size: 18px;
+    width: 152px;
+    padding-top: 10px;
+    padding-bottom: 2px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #505050;
 }
 .streakDiv {
     height: 100px;
-    width: 80%;
     max-width: 800px;
     border-radius: 50px;
-    background: #A5C9CA;
     margin-top: 10px;
-    color:white;
     padding-left:35px;
     padding-right:35px;
     transition: height 0.5s;
     overflow: hidden;
 }
+.notActiveStreak {
+    background-color: #3d434a;
+    color:white;
+    margin-top: 10px;
+    height: 50px;
+    border-radius: 15px;
+    padding-top: 11px;
+    display: flex;
+    flex-direction: row;
+    padding-left: 30px;
+}
+.notActiveName {
+    flex:5;
+}
+.notActiveCounter {
+    flex:5;
+}
+
 .collapsedStreak {
     display: flex;
     flex-direction: row;
