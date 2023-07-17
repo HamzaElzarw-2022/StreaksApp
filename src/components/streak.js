@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import {colors} from "../objects";
 import axios from 'axios';
+import retryIcon from '../retry.png'
+import deleteIcon from '../delete.png'
 
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
@@ -74,6 +76,8 @@ function checkDeadline(streakObject, setlist, list, setNotActiveStreaks)
                     if(document.getElementById(streak.id).offsetHeight === 500)
                         currentlyExtendedStreak = "none";
                     streak.active = false;
+                    if(streak.count > streak.highestStreak)
+                        streak.highestStreak = streak.count;
                     setNotActiveStreaks(prevNotActiveStreaks => [...prevNotActiveStreaks, streak]);
                     alert("\""+ streak.name + "\" has expired because " + res.data.message)
                     document.getElementById("expiredContainer").style.height = (60 * document.getElementById("expiredContainer").childElementCount) + 70 + "px";
@@ -181,12 +185,59 @@ export function Streak({streakObject, setlist, list, setNotActiveStreaks})
         </div>
     )
 }
-export function NotActiveStreak({streakObject}) 
+export function NotActiveStreak({streakObject, setStreaksList, streaksList, setNotActiveStreaks}) 
 {
+    const [isHover, setIsHover] = useState(false);
+    
+    function deleteExpiredStreak() {
+        if (window.confirm(`are you sure you want to delete "${streakObject.name}" streak ?`)) {
+
+            axios.put('http://localhost:8080/deleteStreak',  //----------------------------------------------------------edit server
+                {"id": streakObject.id}
+            ).then((res) => {
+                if(res.data.status === true) {
+                    setNotActiveStreaks( NotActiveStreaks => NotActiveStreaks.filter((streak)=> {
+                        if(streakObject.id === streak.id)
+                            return false;
+                        return true
+                    }))
+                }
+            }).catch((error) => {alert(error.message)});
+
+        }
+    }
+    function retryExpiredStreak() {
+
+        axios.put('http://localhost:8080/retryStreak',  //----------------------------------------------------------edit server
+            {"id": streakObject.id}
+        ).then((res) => {
+            if(res.data.status === true) {
+                setStreaksList( activeStreaks => [...activeStreaks, res.data.streak])
+
+                setNotActiveStreaks( NotActiveStreaks => NotActiveStreaks.filter((streak)=> {
+                    if(streakObject.id === streak.id)
+                        return false;
+                    return true
+                }))
+            }
+        }).catch((error) => {alert(error.message)});
+
+        alert("retry was pressed")
+    }
+
     return(
-        <div className="notActiveStreak">
-            <p className="notActiveName">{streakObject.name}</p>
-            <p className="notActiveCounter"> highest streak: {streakObject.count} </p>
+        <div className="notActiveStreak" onMouseLeave={() => {setIsHover(false)}} onMouseEnter={() => {setIsHover(true)}}>
+            <p className="notActiveName" >{streakObject.name}</p>
+            <p className="notActiveCounter"> highest streak: {streakObject.highestStreak} </p>
+            <p className="notActiveAttemts"> attempts: {streakObject.numberOfAttempts} </p>
+
+            <div className="expiredOptionsDiv" style={{visibility: isHover ? 'visible' : 'hidden' }}>
+                <img src={retryIcon} onClick={retryExpiredStreak} className="retryIcon scaleBig" alt="retryIcon" id="retryIcon"/>
+                <img src={deleteIcon} onClick={deleteExpiredStreak} className="deleteIcon scaleBig" alt="deleteIcon" id="deleteIcon"/>
+            </div>
+            
+            
+            
         </div>
     );
 }

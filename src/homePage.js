@@ -86,7 +86,6 @@ function StreaksContainer ({streaksList, setStreaksList, setNotActiveStreaks, no
     
     function extendExpiredSection() {
         const expiredContainer = document.getElementById("expiredContainer");
-        console.log("fired !!")
         if(expiredContainer.offsetHeight !== 0) {
             expiredContainer.style.height = "0px"; 
             document.getElementById("toggleTriangle").style.transform = "rotate(0deg)"
@@ -102,6 +101,11 @@ function StreaksContainer ({streaksList, setStreaksList, setNotActiveStreaks, no
         <div className="content">
             <div className="streaksContainer">
                 {streaksList.map((str) => {return <Streak key={str.id} streakObject={str} setlist={setStreaksList} list={streaksList} setNotActiveStreaks={setNotActiveStreaks}/>})}
+                {streaksList.length === 0 ? 
+                <div className="noActiveStreaksMessage">
+                    you don't have any active streaks yet, 
+                    start your first streak from the button on the top right.
+                </div> : <></>}
             </div>
             <div className="expiredSection" id="expiredSection">
                 <div className="expiredLabel" onClick={extendExpiredSection}>
@@ -109,12 +113,13 @@ function StreaksContainer ({streaksList, setStreaksList, setNotActiveStreaks, no
                     expired Streaks: 
                 </div>
                 <div className="expiredStreaksContainer" id="expiredContainer">
-                    {notActiveStreaks.map((str) => {return <NotActiveStreak key={str.id} streakObject={str}/>})}
+                    {notActiveStreaks.length === 0 ? <div className="noExpiredStreaksMessage">you don't have any expired streaks 💪</div> : <></>}
+                    {notActiveStreaks.map((str) => {return <NotActiveStreak key={str.id} streakObject={str} setStreaksList={setStreaksList} streaksList={streaksList} setNotActiveStreaks={setNotActiveStreaks}/>})}
                 </div> 
             </div>
             
         </div>
-    );   
+    );
 }
 
 
