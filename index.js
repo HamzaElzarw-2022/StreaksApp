@@ -20,15 +20,15 @@ class streakObject
     this.done= false;
     this.active= true;
     
-
+    
     if(this.dateCreated.getHours() >= roundUpdateTime);
-      this.roundEnd.setDate(this.dateCreated.getDate()+1);
+     this.roundEnd.setDate(this.dateCreated.getDate()+1);
     
     // this.roundEnd.setDate(14);
     this.roundEnd.setHours(roundUpdateTime);
     this.roundEnd.setMinutes(0);  //------------------------------------------------------------------------------
-    this.roundEnd.setSeconds(0); 
-    this.roundEnd.setMilliseconds(0); 
+    this.roundEnd.setSeconds(0);
+    this.roundEnd.setMilliseconds(0);
     
     this.dateCreated= this.dateCreated.toString();
 
@@ -36,8 +36,8 @@ class streakObject
 }
 
 let firstStreak = new streakObject(0, "days using streakApp", 0, 10); //--------------------------------------------
-let secondStreak = new streakObject(1, "Morning Athkar", 1, 18);
-let streaksList = [firstStreak, secondStreak]; 
+
+let streaksList = [firstStreak]; 
 
 app.use(cors());
 app.use(express.json());
@@ -103,6 +103,8 @@ app.put('/roundEnded',  (req, res) => {
           const newRoundEnd = new Date(streak.roundEnd.setDate(streak.roundEnd.getDate()+1));
           streak.done = false;
           streak.roundEnd = newRoundEnd;
+          if(streak.count > streak.highestStreak)
+            streak.highestStreak = streak.count;
 
           res.send({
             status: true,
@@ -129,6 +131,52 @@ app.put('/roundEnded',  (req, res) => {
     }
     return streak;
   })
+  
+})
+
+app.put('/retryStreak',  (req, res) => {
+  console.log("retry streak")
+  for(let i=0; i<streaksList.length; i++) {
+    if(streaksList[i].id === req.body.id) {
+      
+      streaksList[i].active = true;
+      if(streaksList[i].count > streaksList[i].highestStreak)
+        streaksList[i].highestStreak = streaksList[i].count;
+      streaksList[i].count = 0;
+      streaksList[i].numberOfAttempts++;
+
+      if(streaksList[i].roundEnd.getHours() <= new Date().getHours())
+        streaksList[i].roundEnd.setDate(new Date().getDate()+1);
+      else 
+        streaksList[i].roundEnd.setDate(new Date().getDate());
+      
+      res.send({
+        status: true,
+        streak: streaksList[i]
+      })
+      break;
+    }
+    else if(i == streaksList.length-1) {
+      res.send({status: false}) //streak could not be found
+    }
+  }
+
+  
+})
+
+app.put('/deleteStreak',  (req, res) => {
+  console.log("delete streak recieved")
+  
+  for(let i=0; i<streaksList.length; i++) {
+    if(streaksList[i].id === req.body.id) {
+      streaksList.splice(i, 1);
+      res.send({status: true})
+      break;
+    }
+    else if(i == streaksList.length-1) {
+      res.send({status: false}) //streak could not be found
+    }
+  }
   
 })
 
