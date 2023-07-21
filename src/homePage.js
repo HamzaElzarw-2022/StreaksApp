@@ -1,6 +1,7 @@
 import "./app.css";
 import { useState, useEffect } from 'react';
-import {Streak, NotActiveStreak} from './components/streak.js';
+import Streak from './components/streak.js';
+import NotActiveStreak from './components/expiredStreak.js';
 import NewStreakForm from './components/newStreakForm.js';
 import axios from 'axios';
 import toggleTriangle from './toggleTriangle.png';
@@ -93,7 +94,7 @@ function StreaksContainer ({streaksList, setStreaksList, setNotActiveStreaks, no
         else {
             expiredContainer.style.height = (60 * expiredContainer.childElementCount) + 10 + "px";
             document.getElementById("toggleTriangle").style.transform = "rotate(90deg)"
-            
+
         }
     }
     
@@ -114,8 +115,8 @@ function StreaksContainer ({streaksList, setStreaksList, setNotActiveStreaks, no
                 </div>
                 <div className="expiredStreaksContainer" id="expiredContainer">
                     {notActiveStreaks.length === 0 ? <div className="noExpiredStreaksMessage">you don't have any expired streaks 💪</div> : <></>}
-                    {notActiveStreaks.map((str) => {return <NotActiveStreak key={str.id} streakObject={str} setStreaksList={setStreaksList} streaksList={streaksList} setNotActiveStreaks={setNotActiveStreaks}/>})}
-                </div> 
+                    {notActiveStreaks.map((str) => {return <NotActiveStreak key={str.id} streakObject={str} setStreaksList={setStreaksList} setNotActiveStreaks={setNotActiveStreaks}/>})}
+                </div>
             </div>
             
         </div>

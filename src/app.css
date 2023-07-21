@@ -210,6 +210,7 @@ html,body {
 }
 .expiredOptionsDiv{
     width: 74px;
+    min-width: 74px;
     transition: display 0.5s;
     flex:1;
 }
@@ -251,8 +252,7 @@ html,body {
 .extendedStreak {
     text-align: center;
     padding-top: 30px;  
-    padding-bottom: 30px;
-    height: 500px;
+    height: auto;
 }
 .exStreakName {
     font-size: 40px;
@@ -278,7 +278,25 @@ html,body {
 .exStreakState {
     font-size: 20px;
 }
+.emptyExStreak {
+    height: 30px;
+    margin-bottom: 0px;
+}
 .sub {
     font-size: 12px;
 }
-
+.streakDetails {
+    display: flex;
+    flex-wrap: wrap;
+}
+.detailElement {
+    flex: 5;
+    font-size: 18px;
+}
+.highestStreakDetail {
+    min-width: 27px;
+}
+.divider {
+    height: 1px;
+    margin: 5px 0px;
+}

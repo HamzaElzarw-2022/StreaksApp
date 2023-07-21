@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import {colors} from "../objects";
 import axios from 'axios';
-import retryIcon from '../retry.png'
-import deleteIcon from '../delete.png'
+
 
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
@@ -14,14 +13,14 @@ let removingStreak = false;
 async function extendStreak(e) 
 {
     if(e.target.tagName !== "BUTTON") {
-        if(e.target.offsetHeight !== 500 ) 
+        if(e.target.offsetHeight !== 520 ) 
         {
             
             if(currentlyExtendedStreak !== "none") {
                 document.getElementById(currentlyExtendedStreak).style.height = "100px";
                 document.getElementById(currentlyExtendedStreak).firstChild.style.height = "100px";
             }
-            e.target.style.height = "500px";
+            e.target.style.height = "520px";
             currentlyExtendedStreak = e.target.id;
             e.target.firstChild.style.height = "0px";
             await delay(400);
@@ -93,7 +92,7 @@ function checkDeadline(streakObject, setlist, list, setNotActiveStreaks)
     });
 }
 
-export function Streak({streakObject, setlist, list, setNotActiveStreaks}) 
+export default function Streak({streakObject, setlist, list, setNotActiveStreaks}) 
 {   
     const colorPalette = colors[streakObject.theme]
     const [timespan, setTimespan] = useState(new Date(streakObject.roundEnd) - Date.now());
@@ -140,13 +139,16 @@ export function Streak({streakObject, setlist, list, setNotActiveStreaks})
     }
     function DoneStreakButton() {
         return(
-            <button disabled 
-                className="incrementButton" 
-                type="button"  
-                onClick={() => incrementCounter(streakObject, setlist, list)} 
-                style={{background: colorPalette.fontColor, color: colorPalette.mainColor}}>
-                <RemainingTime />
-            </button>
+            <>
+                <button disabled 
+                    className="incrementButton" 
+                    type="button"  
+                    onClick={() => incrementCounter(streakObject, setlist, list)} 
+                    style={{background: colorPalette.fontColor, color: colorPalette.mainColor}}>
+                    <RemainingTime />
+                </button>
+                <p className="emptyExStreak"></p>
+            </>
         )
     }
     function NotDoneStreakButton() {
@@ -176,68 +178,18 @@ export function Streak({streakObject, setlist, list, setNotActiveStreaks})
                 <p className="streakName streakElements">{streakObject.name}</p>
                 <p className="streakState streakElements"><RemainingTime /></p>
             </div>
-
+            
             <div className="extendedStreak  streakElements" id="extendedData">
+                
                 <p className="streakElements exStreakName">{streakObject.name}</p>
                 <p className="streakElements exStreakCount" >{streakObject.count}<span className="exsub">days</span></p>
                 { streakObject.done ? <DoneStreakButton /> : <NotDoneStreakButton />}
+                <div className="divider" style={{background: colorPalette.fontColor}}></div>
+                <div className="streakDetails">
+                    <div className="detailElement">Attempts: {streakObject.numberOfAttempts}</div>
+                    <div className="detailElement highestStreakDetail">Highest Streak: {streakObject.highestStreak}</div>
+                </div>
             </div>
         </div>
     )
-}
-export function NotActiveStreak({streakObject, setStreaksList, streaksList, setNotActiveStreaks}) 
-{
-    const [isHover, setIsHover] = useState(false);
-    
-    function deleteExpiredStreak() {
-        if (window.confirm(`are you sure you want to delete "${streakObject.name}" streak ?`)) {
-
-            axios.put('http://localhost:8080/deleteStreak',  //----------------------------------------------------------edit server
-                {"id": streakObject.id}
-            ).then((res) => {
-                if(res.data.status === true) {
-                    setNotActiveStreaks( NotActiveStreaks => NotActiveStreaks.filter((streak)=> {
-                        if(streakObject.id === streak.id)
-                            return false;
-                        return true
-                    }))
-                }
-            }).catch((error) => {alert(error.message)});
-
-        }
-    }
-    function retryExpiredStreak() {
-
-        axios.put('http://localhost:8080/retryStreak',  //----------------------------------------------------------edit server
-            {"id": streakObject.id}
-        ).then((res) => {
-            if(res.data.status === true) {
-                setStreaksList( activeStreaks => [...activeStreaks, res.data.streak])
-
-                setNotActiveStreaks( NotActiveStreaks => NotActiveStreaks.filter((streak)=> {
-                    if(streakObject.id === streak.id)
-                        return false;
-                    return true
-                }))
-            }
-        }).catch((error) => {alert(error.message)});
-
-        alert("retry was pressed")
-    }
-
-    return(
-        <div className="notActiveStreak" onMouseLeave={() => {setIsHover(false)}} onMouseEnter={() => {setIsHover(true)}}>
-            <p className="notActiveName" >{streakObject.name}</p>
-            <p className="notActiveCounter"> highest streak: {streakObject.highestStreak} </p>
-            <p className="notActiveAttemts"> attempts: {streakObject.numberOfAttempts} </p>
-
-            <div className="expiredOptionsDiv" style={{visibility: isHover ? 'visible' : 'hidden' }}>
-                <img src={retryIcon} onClick={retryExpiredStreak} className="retryIcon scaleBig" alt="retryIcon" id="retryIcon"/>
-                <img src={deleteIcon} onClick={deleteExpiredStreak} className="deleteIcon scaleBig" alt="deleteIcon" id="deleteIcon"/>
-            </div>
-            
-            
-            
-        </div>
-    );
 }
