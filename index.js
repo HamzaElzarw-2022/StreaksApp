@@ -1,82 +1,85 @@
 const express = require('express');
-const app = express();
-var cors = require('cors')
-var bodyParser = require('body-parser')
+const cors = require('cors')
+const mongoose = require('mongoose');
+const {streak, streakObject} = require('./streak')
+
 const port = 8080;
-
-class streakObject 
-{
-  constructor(id, name, theme, roundUpdateTime) {
-    this.id= id;
-    this.name= name;
-    this.theme= theme;
-
-    this.count= 0;
-    this.highestStreak = 0;
-    this.numberOfAttempts = 1;
-    this.dateCreated= new Date();
-    this.roundEnd = new Date();
-    
-    this.done= false;
-    this.active= true;
-    
-    
-    if(this.dateCreated.getHours() >= roundUpdateTime);
-     this.roundEnd.setDate(this.dateCreated.getDate()+1);
-    
-    // this.roundEnd.setDate(14);
-    this.roundEnd.setHours(roundUpdateTime);
-    this.roundEnd.setMinutes(0);  //------------------------------------------------------------------------------
-    this.roundEnd.setSeconds(0);
-    this.roundEnd.setMilliseconds(0);
-    
-    this.dateCreated= this.dateCreated.toString();
-
-  }
-}
-
-let firstStreak = new streakObject(0, "days using streakApp", 0, 10); //--------------------------------------------
-
-let streaksList = [firstStreak]; 
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+mongoose.connect('mongodb://127.0.0.1:27017/mainDB')
+.then(()=>{
+  console.log("connected to DB")
+  app.listen(port, () => {
+    console.log(`server is listening on port ${port}`)
+  })
+}).catch((err) => {
+  console.log(err)
+})
+
 //get saved streaks
 app.get('/getStreaks', (req, res) => {
-  res.send(JSON.stringify(streaksList));
+
+  streak.find({})
+    .then( result => {res.json(result);})
+    .catch(error => {console.log(error)})
+
 })
 
 //create a new streak
 app.put('/newStreaks',  (req, res) => {
 
   console.log("newStreak recieved");
-  console.log(req.body);
-  const newStreak = new streakObject(streaksList.length, req.body.name, req.body.theme, req.body.roundUpdateTime);
-  console.log(newStreak);
-  streaksList.push(newStreak);
+  const newStreak = new streak(new streakObject(req.body.name, req.body.theme, req.body.roundUpdateTime));
 
-  res.send(newStreak);
+  newStreak.save().then(()=>{
+    res.json(newStreak);
+  }).catch(error =>{
+    console.log(error)
+  })
 })
 
 app.put('/incrementStreak',  (req, res) => {
 
   console.log("incrementStreak recieved");
 
-  streaksList.map((streak) => {
-    if(streak.id == req.body.id) {
+  streak.findById(req.body.id).then( document => {
 
-      if(streak.done == false && streak.active == true) {
-        streak.count++;
-        streak.done = true;
-        res.send(true);
-        console.log(streak)
-        
-      }
-      else
-        res.send(false);
+    // console.log(document)
+
+    if(document == null) {
+      res.json({
+        status: false,
+        meassage: "streak id not found"
+      })
     }
-    return streak;
+    else if(document.done == false && document.active == true) {
+      
+      streak.findByIdAndUpdate(req.body.id, {
+        done: true,
+        $inc: { count: 1 }
+      }).then( () => {
+        res.json({
+          status: true,
+          meassage: "success"
+        });
+      })
+    }
+    else {
+      res.json({
+        status: false,
+        meassage: "streak is not active or already done"
+      });
+    }
+  
+  }).catch( error => {
+    console.log(error)
+    res.json({
+      status: false,
+      meassage: "DB error"
+    });
   })
   
 })
@@ -85,98 +88,134 @@ app.put('/roundEnded',  (req, res) => {
 
   console.log("round end recieved");
 
-  streaksList.map((streak) => {
-    if(streak.id == req.body.id && streak.active == true) 
-    {
-      
-      if(streak.done == true) 
-      {
-        if((Date.now() - new Date(streak.roundEnd)) > 86430000) { //check if more than one day has passed
-          
-          streak.active = false;
-          res.send({
-            status: false,
-            message: "more than one day has passed since last deadline!!"
-          });
-        }
-        else {
-          const newRoundEnd = new Date(streak.roundEnd.setDate(streak.roundEnd.getDate()+1));
-          streak.done = false;
-          streak.roundEnd = newRoundEnd;
-          if(streak.count > streak.highestStreak)
-            streak.highestStreak = streak.count;
+  streak.findById(req.body.id).then( document => {
 
-          res.send({
+    if(document == null) {
+      res.json({
+        status: false,
+        meassage: "streak id not found"
+      })
+    }
+    else if(document.active) {
+
+      let newHighestStreak = document.highestStreak;
+      if(document.count > newHighestStreak)
+        newHighestStreak = document.count;
+
+      //check that streak is done and only less than 24h has passed since last deadline
+      if(document.done && (Date.now() - new Date(document.roundEnd)) < 86430000) 
+      {
+        const newRoundEnd = new Date(document.roundEnd.setDate(document.roundEnd.getDate()+1));
+
+        streak.findByIdAndUpdate(req.body.id, {
+          done: false,
+          roundEnd: newRoundEnd,
+          highestStreak: newHighestStreak
+        }).then( () => {
+          res.json({
             status: true,
+            action: "active",
             message: "new round started",
             newRoundEnd: newRoundEnd
           });
-        }
+        })
       }
-      else {
-        streak.active = false;
-        res.send({
-          status: false,
-          message: "deadline has passed!!"
-        });
+      else { //streak deadline has passed
+        streak.findByIdAndUpdate(req.body.id, {
+          active: false,
+          done: false,
+          highestStreak: newHighestStreak
+        }).then( () => {
+          res.json({
+            status: true,
+            action: "expired",
+            message: "deadline has passed!!"
+          });
+        })
       }
 
     }
-    else if(streak.id == req.body.id){
-      console.log("else was reached")
-      res.send({
+    else { //streak is not active
+      res.json({
         status: false,
-        message: "an error has occured"
-      })
+        meassage: "streak is not active"
+      });
     }
-    return streak;
+
+  }).catch(error => {
+    console.log(error)
+    res.json({
+      status: false,
+      meassage: "DB error"
+    })
   })
   
 })
 
 app.put('/retryStreak',  (req, res) => {
   console.log("retry streak")
-  for(let i=0; i<streaksList.length; i++) {
-    if(streaksList[i].id === req.body.id) {
-      
-      streaksList[i].active = true;
-      if(streaksList[i].count > streaksList[i].highestStreak)
-        streaksList[i].highestStreak = streaksList[i].count;
-      streaksList[i].count = 0;
-      streaksList[i].numberOfAttempts++;
 
-      if(streaksList[i].roundEnd.getHours() <= new Date().getHours())
-        streaksList[i].roundEnd.setDate(new Date().getDate()+1);
-      else 
-        streaksList[i].roundEnd.setDate(new Date().getDate());
-      
-      res.send({
-        status: true,
-        streak: streaksList[i]
+  streak.findById(req.body.id).then( document => {
+
+    if(document == null) 
+    {
+      res.json({
+        status: false,
+        meassage: "streak id not found"
       })
-      break;
     }
-    else if(i == streaksList.length-1) {
-      res.send({status: false}) //streak could not be found
-    }
-  }
+    else if(!document.active) 
+    {
+      let newRoundEnd = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), document.roundEnd.getHours())
+      if(document.roundEnd.getHours() <= new Date().getHours()) 
+        newRoundEnd.setDate(new Date().getDate()+1);
 
-  
+      streak.findByIdAndUpdate(req.body.id, {
+        done: false,
+        active: true,
+        count: 0,
+        $inc: { numberOfAttempts: 1 },
+        roundEnd: newRoundEnd
+      }).then( async () => {
+        res.json({
+          status: true,
+          streak: await streak.findById(req.body.id)
+        })
+      })
+    }
+    else 
+    {
+      res.json({
+        status: false,
+        meassage: "streak is already active"
+      })
+    }
+  })
 })
 
 app.put('/deleteStreak',  (req, res) => {
   console.log("delete streak recieved")
   
-  for(let i=0; i<streaksList.length; i++) {
-    if(streaksList[i].id === req.body.id) {
-      streaksList.splice(i, 1);
-      res.send({status: true})
-      break;
+  streak.findByIdAndDelete(req.body.id).then((document)=>{
+    if(document == null) {
+      res.send({
+        status: false,
+        message: "streak not found"
+      })
+      return;
     }
-    else if(i == streaksList.length-1) {
-      res.send({status: false}) //streak could not be found
-    }
-  }
+    res.send({
+      status: true,
+      message: "streak was deleted"
+    })
+
+  }).catch(error => {
+    console.log(error)
+    res.send({
+      status: false,
+      message: "DB error"
+    })
+  })
   
 })
 
@@ -189,7 +228,3 @@ app.options('/allowCors', () => {
 app.all('*', (req) => {
   console.log("request at All methode: " + req.method + " URL " + req.url);
 });
-
-app.listen(port, () => {
-  console.log(`server is listening on port ${port}`)
-})
