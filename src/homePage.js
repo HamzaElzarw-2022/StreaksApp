@@ -101,7 +101,7 @@ function StreaksContainer ({streaksList, setStreaksList, setNotActiveStreaks, no
     return (
         <div className="content">
             <div className="streaksContainer">
-                {streaksList.map((str) => {return <Streak key={str.id} streakObject={str} setlist={setStreaksList} list={streaksList} setNotActiveStreaks={setNotActiveStreaks}/>})}
+                {streaksList.map((str) => {return <Streak key={str._id} streakObject={str} setlist={setStreaksList} list={streaksList} setNotActiveStreaks={setNotActiveStreaks}/>})}
                 {streaksList.length === 0 ? 
                 <div className="noActiveStreaksMessage">
                     you don't have any active streaks yet, 
@@ -115,7 +115,7 @@ function StreaksContainer ({streaksList, setStreaksList, setNotActiveStreaks, no
                 </div>
                 <div className="expiredStreaksContainer" id="expiredContainer">
                     {notActiveStreaks.length === 0 ? <div className="noExpiredStreaksMessage">you don't have any expired streaks 💪</div> : <></>}
-                    {notActiveStreaks.map((str) => {return <NotActiveStreak key={str.id} streakObject={str} setStreaksList={setStreaksList} setNotActiveStreaks={setNotActiveStreaks}/>})}
+                    {notActiveStreaks.map((str) => {return <NotActiveStreak key={str._id} streakObject={str} setStreaksList={setStreaksList} setNotActiveStreaks={setNotActiveStreaks}/>})}
                 </div>
             </div>
             

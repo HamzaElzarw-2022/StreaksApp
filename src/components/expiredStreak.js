@@ -11,11 +11,11 @@ export default function NotActiveStreak({streakObject, setStreaksList, setNotAct
         if (window.confirm(`are you sure you want to delete "${streakObject.name}" streak ?`)) {
 
             axios.put('http://localhost:8080/deleteStreak',
-                {"id": streakObject.id}
+                {"id": streakObject._id}
             ).then((res) => {
                 if(res.data.status === true) {
                     setNotActiveStreaks( NotActiveStreaks => NotActiveStreaks.filter((streak)=> {
-                        if(streakObject.id === streak.id)
+                        if(streakObject._id === streak._id)
                             return false;
                         return true
                     }))
@@ -27,20 +27,22 @@ export default function NotActiveStreak({streakObject, setStreaksList, setNotAct
     function retryExpiredStreak() {
 
         axios.put('http://localhost:8080/retryStreak',
-            {"id": streakObject.id}
+            {"id": streakObject._id}
         ).then((res) => {
-            if(res.data.status === true) {
+            if(res.data.status) {
                 setStreaksList( activeStreaks => [...activeStreaks, res.data.streak])
 
                 setNotActiveStreaks( NotActiveStreaks => NotActiveStreaks.filter((streak)=> {
-                    if(streakObject.id === streak.id)
+                    if(streakObject._id === streak._id)
                         return false;
                     return true
                 }))
             }
+            else
+                alert(res.data.message);
         }).catch((error) => {alert(error.message)});
 
-        alert("retry was pressed")
+        alert("streak was moved to active streaks")
     }
 
     return(
