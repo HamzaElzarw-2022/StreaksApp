@@ -14,9 +14,8 @@ class streakObject
     this.done= false;
     this.active= true;
 
-    this.roundEnd = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), roundUpdateTime)
-    if(new Date().getHours() >= roundUpdateTime);
-     this.roundEnd.setDate(new Date().getDate()+1);
+    const day = new Date().getHours() >= roundUpdateTime ? new Date().getDate()+1 : new Date().getDate();
+    this.roundEnd = new Date(new Date().getFullYear(), new Date().getMonth(), day, roundUpdateTime)
 
   }
 }
