@@ -1,11 +1,12 @@
-import "./app.css";
-import { useState, useEffect } from 'react';
-import Streak from './components/streak.js';
-import NotActiveStreak from './components/expiredStreak.js';
-import NewStreakForm from './components/newStreakForm.js';
-import axios from 'axios';
-import toggleTriangle from './toggleTriangle.png';
 
+import { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+
+import Streak from '../components/streak.js';
+import NotActiveStreak from '../components/expiredStreak.js';
+import toggleTriangle from '../icons/toggleTriangle.png';
+import NewStreakForm from '../components/newStreakForm.js';
+import { StreaksProvider, streaksContext } from '../contexts/streaksContext.js';
 //TODO
 //fix the scroll and done button problem
 //start working with DB
@@ -23,42 +24,14 @@ function formVisibility() {
 
 //main component that contain all components
 export default function HomePage() {
-
-    const [notActiveStreaks, setNotActiveStreaks] = useState([]);
-    const [streaksList, setStreaksList] = useState([]);
-    const [initialized, setInitialized] = useState(true);
-
-    function getstreaks() 
-    {
-        
-        setInitialized(true);
-        axios.get('http://localhost:8080/getStreaks'
-        ).then(function(response) {
-
-            console.log(response);
-            response.data.map((streak) => {
-                if(streak.active === true) 
-                    setStreaksList(prevStreaksList => [...prevStreaksList, streak]);
-                else 
-                    setNotActiveStreaks(prevNotActiveStreaks => [...prevNotActiveStreaks, streak]);
-                return streak;
-            })
-            
-        }).catch((error) => {
-            setInitialized(false);
-            console.log(initialized)
-        });
-    }
-    useEffect(()=>{
-        getstreaks();
-    }, []);
     
     return (
         <div>
             <TitleBar showForm={formVisibility}/>
-            <NewStreakForm hideForm={formVisibility} list={streaksList} setlist={setStreaksList}/>
-            {!initialized ? <FailedToLoad reload={getstreaks}/> : 
-                <StreaksContainer streaksList={streaksList} setStreaksList={setStreaksList} setNotActiveStreaks={setNotActiveStreaks} notActiveStreaks={notActiveStreaks}/>}
+            <StreaksProvider>
+                <NewStreakForm hideForm={formVisibility}/>
+                <StreaksContainer/>
+            </StreaksProvider>
         </div>
     );
 }
@@ -77,14 +50,37 @@ function FailedToLoad({reload}) {
 function TitleBar({showForm}) {
     return (
         <div className= "titleDiv">
-            <span className="title">🔥My Streaks</span> 
+            <span className="title">🔥Streaks</span> 
             <button className="newStreakButton" type="button" onClick={showForm}>➕New Streak</button>
         </div>
     );
 }
 //the container that includes all the streaks inside
-function StreaksContainer ({streaksList, setStreaksList, setNotActiveStreaks, notActiveStreaks}) {
-    
+function StreaksContainer () {
+
+    const {streaksDispatch, expiredDispatch, streaks, expiredStreaks} = useContext(streaksContext);
+    const [initialized, setInitialized] = useState(false);
+
+    const getstreaks = async () => {
+        try {
+            if(!initialized) {
+                const response = await axios.get(process.env.REACT_APP_PORT + '/getStreaks')
+                console.log(response);
+
+                response.data.map((streak) => {
+                    if(streak.active === true) 
+                        streaksDispatch({ type: 'add', streak: streak })
+                    else 
+                        expiredDispatch({ type: 'add', streak: streak })
+                    return streak;
+                })
+                setInitialized(true);
+            }
+        } catch { setInitialized(false) }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(()=>{ getstreaks() },[]);
+
     function extendExpiredSection() {
         const expiredContainer = document.getElementById("expiredContainer");
         if(expiredContainer.offsetHeight !== 0) {
@@ -99,13 +95,15 @@ function StreaksContainer ({streaksList, setStreaksList, setNotActiveStreaks, no
     }
     
     return (
+        <>
+        {!initialized ? <FailedToLoad reload={getstreaks}/> : 
         <div className="content">
             <div className="streaksContainer">
-                {streaksList.map((str) => {return <Streak key={str._id} streakObject={str} setlist={setStreaksList} list={streaksList} setNotActiveStreaks={setNotActiveStreaks}/>})}
-                {streaksList.length === 0 ? 
+                {streaks.map((str) => {return <Streak key={str._id} streakObject={str} />})}
+                {streaks.length === 0 ? 
                 <div className="noActiveStreaksMessage">
-                    you don't have any active streaks yet, 
-                    start your first streak from the button on the top right.
+                    you don't have any active streaks, 
+                    start a new streak by clicking on the button on the top right.
                 </div> : <></>}
             </div>
             <div className="expiredSection" id="expiredSection">
@@ -114,12 +112,13 @@ function StreaksContainer ({streaksList, setStreaksList, setNotActiveStreaks, no
                     expired Streaks: 
                 </div>
                 <div className="expiredStreaksContainer" id="expiredContainer">
-                    {notActiveStreaks.length === 0 ? <div className="noExpiredStreaksMessage">you don't have any expired streaks 💪</div> : <></>}
-                    {notActiveStreaks.map((str) => {return <NotActiveStreak key={str._id} streakObject={str} setStreaksList={setStreaksList} setNotActiveStreaks={setNotActiveStreaks}/>})}
+                    {expiredStreaks.map((str) => {return <NotActiveStreak key={str._id} streakObject={str} />})}
+                    {expiredStreaks.length === 0 ? <div className="noExpiredStreaksMessage">you don't have any expired streaks 💪</div> : <></>}
                 </div>
             </div>
-            
-        </div>
+        </div>}
+        </>
+        
     );
 }
 

@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react';
-import {colors} from "../objects";
+import { useState, useEffect, useContext } from 'react';
+import {colors} from "./newStreakForm";
 import axios from 'axios';
-
+import { streaksContext } from '../contexts/streaksContext';
 
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
-let currentlyExtendedStreak = "none"; //to keep track of the currently extended streak
 const delay = ms => new Promise(res => setTimeout(res, ms));
-let removingStreak = false;
+let currentlyExtendedStreak = "none"; //currently extended streak
 
-async function extendStreak(e) 
+const extendStreak = async (e) =>
 {
     if(e.target.tagName !== "BUTTON") {
         if(e.target.offsetHeight !== 520 ) 
@@ -34,74 +33,54 @@ async function extendStreak(e)
         }
     }
 }
-function incrementCounter(streakObject, setlist, list) 
+const incrementCounter = async (_id, streaksDispatch) =>
 {
-    axios.put('http://localhost:8080/incrementStreak', 
-        {"id": streakObject._id}
-    ).then((res) => {
-        console.log(res.data)
+    const response = await axios.put(process.env.REACT_APP_PORT + '/incrementStreak', {"id": _id})
 
-        if(res.data.status) {
-            setlist(list.map((streak) => {
-                if(streak._id === streakObject._id) {
-                    streak.count++;
-                    streak.done = true;
-                }
-                return streak;
-            }))
-        }
-        else
-            alert(res.data.message)
-    }).catch((error) => {alert(error)});
+    if(response.data.status) 
+        streaksDispatch({
+            type: 'increment',
+            _id: _id
+        })
+    else
+        alert(response.data.message)
+    
 }
-function checkDeadline(streakObject, setlist, list, setNotActiveStreaks) 
+const checkDeadline = async (_id, streaksDispatch, expiredDispatch) =>
 {
-    removingStreak = true;
-    axios.put('http://localhost:8080/roundEnded', 
-        {"id": streakObject._id}
-    ).then((res) => {
-        if(res.data.status === true) {  // status is true if streak.done was true
-
-            if(res.data.action === "active") 
-            {
-                setlist(list.map((streak) => {
-                    if(streak._id === streakObject._id) {
-                        streak.roundEnd = res.data.newRoundEnd;
-                        streak.done = false;
-                    }
-                    return streak;
-                }))
-            }
-            else 
-            {
-                setlist(list.filter((streak) => {
-                    if(streak._id === streakObject._id) {
-                        if(document.getElementById(streak._id).offsetHeight === 500)
-                            currentlyExtendedStreak = "none";
-                        streak.active = false;
-                        if(streak.count > streak.highestStreak)
-                            streak.highestStreak = streak.count;
-                        setNotActiveStreaks(prevNotActiveStreaks => [...prevNotActiveStreaks, streak]);
-                        alert("\""+ streak.name + "\" has expired because " + res.data.message)
-                        document.getElementById("expiredContainer").style.height = (60 * document.getElementById("expiredContainer").childElementCount) + 70 + "px";
-                        return false;
-                    }
-                    return true;
-                }))
-            }
-        }
+    const response = await axios.put(process.env.REACT_APP_PORT + '/roundEnded', {"id": _id} )
+        
+    if(response.data.status === true) {
+        if(response.data.action === "active") 
+            streaksDispatch({
+                type: 'updateRound',
+                newDeadline: response.data.newRoundEnd,
+                _id: _id
+            })
         else {
-            alert(res.data.message)
+            streaksDispatch({
+                type: 'remove',
+                _id: _id
+            })
+            expiredDispatch({
+                type: 'add',
+                streak: response.data.streak
+            })
+
+            document.getElementById("expiredContainer").style.height = (60 * document.getElementById("expiredContainer").childElementCount) + 70 + "px";
+            if(document.getElementById(_id).offsetHeight === 500) 
+                        currentlyExtendedStreak = "none";
+
+            alert("\""+ response.data.streak.name + "\" has expired because " + response.data.message)
         }
-        removingStreak = false;
-    }).catch((error) => {
-        alert(error)
-        removingStreak = false;
-    });
+    }
+    else 
+        alert(response.data.message) 
 }
 
-export default function Streak({streakObject, setlist, list, setNotActiveStreaks}) 
+export default function Streak({streakObject}) 
 {   
+    const {streaksDispatch, expiredDispatch} = useContext(streaksContext)
     const colorPalette = colors[streakObject.theme]
     const [timespan, setTimespan] = useState(new Date(streakObject.roundEnd) - Date.now());
     
@@ -110,22 +89,22 @@ export default function Streak({streakObject, setlist, list, setNotActiveStreaks
     const seconds = Math.floor((timespan / SECOND) % 60);
 
     //change remaining time every second
-    useEffect(() => { 
+    useEffect(() => 
+    { 
         const intervalId = setInterval(() => {setTimespan((_timespan) => {
 
             const newTimeSpan = _timespan - SECOND;
-            if(newTimeSpan <= 0 && streakObject.active === true && removingStreak === false) 
-                checkDeadline(streakObject, setlist, list, setNotActiveStreaks)
+            if(newTimeSpan <= 0 && streakObject.active) 
+                checkDeadline(streakObject._id, streaksDispatch, expiredDispatch)
             return newTimeSpan;
-
         })}, SECOND);
-  
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, [list, setNotActiveStreaks, setlist, streakObject]);
-    //change remaining time according if deadline change
-    useEffect(() => {
+        return () => {clearInterval(intervalId)};
+
+    }, [expiredDispatch, streaksDispatch, streakObject]);
+
+    //change remaining time if deadline change
+    useEffect(() => 
+    {
       setTimespan(new Date(streakObject.roundEnd) - Date.now());
     }, [streakObject.roundEnd]);
 
@@ -150,7 +129,7 @@ export default function Streak({streakObject, setlist, list, setNotActiveStreaks
                 <button disabled 
                     className="incrementButton" 
                     type="button"  
-                    onClick={() => incrementCounter(streakObject, setlist, list)} 
+                    onClick={() => incrementCounter(streakObject._id, streaksDispatch)} 
                     style={{background: colorPalette.fontColor, color: colorPalette.mainColor}}>
                     <RemainingTime />
                 </button>
@@ -164,7 +143,7 @@ export default function Streak({streakObject, setlist, list, setNotActiveStreaks
             <button 
                 className="incrementButton" 
                 type="button"  
-                onClick={() => incrementCounter(streakObject, setlist, list)}
+                onClick={() => incrementCounter(streakObject._id, streaksDispatch)}
                 style={{background: colorPalette.fontColor, color: colorPalette.mainColor}}>
                 Done
             </button>

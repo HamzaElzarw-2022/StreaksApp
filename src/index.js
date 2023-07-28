@@ -1,12 +1,12 @@
 import React from 'react';
+import "./app.css";
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Login from './login';
-import HomePage from './homePage';
+import Login from './views/login';
+import HomePage from './views/homePage';
 
 import "bootstrap/dist/css/bootstrap.css";
-
 
 const router = createBrowserRouter([
     {

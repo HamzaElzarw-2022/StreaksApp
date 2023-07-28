@@ -1,48 +1,41 @@
-import { useState} from 'react';
+import { useContext, useState} from 'react';
 import axios from 'axios';
-import retryIcon from '../retry.png'
-import deleteIcon from '../delete.png'
+import retryIcon from '../icons/retry.png'
+import deleteIcon from '../icons/delete.png'
+import { streaksContext } from '../contexts/streaksContext';
 
-export default function NotActiveStreak({streakObject, setStreaksList, setNotActiveStreaks}) 
+export default function NotActiveStreak({streakObject}) 
 {
+    const {streaksDispatch, expiredDispatch} = useContext(streaksContext)
     const [isHover, setIsHover] = useState(false);
     
-    function deleteExpiredStreak() {
+    const deleteExpiredStreak = async() => {
         if (window.confirm(`are you sure you want to delete "${streakObject.name}" streak ?`)) {
-
-            axios.put('http://localhost:8080/deleteStreak',
-                {"id": streakObject._id}
-            ).then((res) => {
-                if(res.data.status === true) {
-                    setNotActiveStreaks( NotActiveStreaks => NotActiveStreaks.filter((streak)=> {
-                        if(streakObject._id === streak._id)
-                            return false;
-                        return true
-                    }))
-                }
-            }).catch((error) => {alert(error.message)});
-
+            const response = await axios.put(process.env.REACT_APP_PORT + '/deleteStreak', {"id": streakObject._id} )
+            if(response.data.status === true) 
+                expiredDispatch({
+                    type: 'remove',
+                    _id: streakObject._id
+                })
+            else
+                alert(response.data.message)
         }
     }
-    function retryExpiredStreak() {
-
-        axios.put('http://localhost:8080/retryStreak',
-            {"id": streakObject._id}
-        ).then((res) => {
-            if(res.data.status) {
-                setStreaksList( activeStreaks => [...activeStreaks, res.data.streak])
-
-                setNotActiveStreaks( NotActiveStreaks => NotActiveStreaks.filter((streak)=> {
-                    if(streakObject._id === streak._id)
-                        return false;
-                    return true
-                }))
-            }
-            else
-                alert(res.data.message);
-        }).catch((error) => {alert(error.message)});
-
-        alert("streak was moved to active streaks")
+    const retryExpiredStreak = async() => {
+        const response = await axios.put(process.env.REACT_APP_PORT + '/retryStreak', {"id": streakObject._id} )
+        if(response.data.status) {
+            streaksDispatch({
+                type: 'add',
+                streak: response.data.streak
+            })
+            expiredDispatch({
+                type: 'remove',
+                _id: streakObject._id
+            })
+            alert(`"${response.data.streak.name}" streak was moved to active streaks`)
+        }
+        else
+            alert(response.data.message);
     }
 
     return(
