@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import "../styles/homePage.css";
 
 import Streak from '../components/streak.js';
 import NotActiveStreak from '../components/expiredStreak.js';
