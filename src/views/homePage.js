@@ -65,7 +65,7 @@ function StreaksContainer () {
     const getstreaks = async () => {
         try {
             if(!initialized) {
-                const response = await axios.get(process.env.REACT_APP_PORT + '/getStreaks')
+                const response = await axios.get(process.env.REACT_APP_PORT + '/streak/getStreaks')
                 console.log(response);
 
                 response.data.map((streak) => {

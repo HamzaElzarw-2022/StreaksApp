@@ -7,27 +7,31 @@ import axios from 'axios';
 export default function NewStreakForm({hideForm}) {
 
     const { streaksDispatch } = useContext(streaksContext)
-    const [inputs] = useState({name:"", color:"", roundUpdateTime: -1, ampm:""});
+    // const [inputs] = useState({name:"", color:"", roundUpdateTime: -1, ampm:""});
+    const [name, setName] = useState("");
+    const [color, setColor] = useState("");
+    const [roundUpdateTime, setRoundUpdateTime] = useState(-1);
+    const [ampm, setAmpm] = useState("");
 
     async function makeNewStreak() 
     {
         
-        if (inputs.name === "") {
+        if (name === "") {
             alert("please enter Name of the streak!"); }
-        else if(inputs.color === "") {
+        else if(color === "") {
             alert("please enter Color of the streak!"); }
-        else if(inputs.roundUpdateTime === -1) {
+        else if(roundUpdateTime === -1) {
             alert("please enter Round start time of the streak!"); }
         else 
         {
-            if(inputs.ampm === "PM")
-                inputs.roundUpdateTime = inputs.roundUpdateTime + 12;
+            if(ampm === "PM")
+                setRoundUpdateTime(roundUpdateTime + 12);
             
             try {
-                const response = await axios.put(process.env.REACT_APP_PORT + '/newStreaks', {
-                    "name": inputs.name, 
-                    "theme": inputs.color ,
-                    "roundUpdateTime": inputs.roundUpdateTime
+                const response = await axios.put(process.env.REACT_APP_PORT + '/streak/newStreaks', {
+                    "name": name, 
+                    "theme": color ,
+                    "roundUpdateTime": roundUpdateTime
                 })
                 streaksDispatch({
                     type: 'add',
@@ -36,9 +40,9 @@ export default function NewStreakForm({hideForm}) {
             } catch (error) {console.log(error)} 
 
             hideForm();
-            inputs.name = ('');
-            inputs.color = ('');
-            inputs.roundUpdateTime = ('');
+            setName('');
+            setColor('');
+            setRoundUpdateTime(-1);
             document.getElementById("nameTextBox").value = "";
             document.getElementById("updateTextBox").value = "";
             document.getElementById("colorSelector").value = "";
@@ -51,23 +55,23 @@ export default function NewStreakForm({hideForm}) {
                 <label>
                     <span>Streak Name:</span>
                     <input type="text" className="formText" id="nameTextBox"
-                        onChange={e => inputs.name = (e.target.value)}></input>
+                        onChange={e => setName(e.target.value)}></input>
                 </label>
                
                 <label className="selectInput">
                     <span>round update time:</span>
-                        <select name="time" className="formTime" id="updateTextBox" onChange={e => inputs.roundUpdateTime = parseInt(e.target.value)}>
+                        <select name="time" className="formTime" id="updateTextBox" onChange={e => setRoundUpdateTime(parseInt(e.target.value))}>
                             <option value="-1" >Select Time</option>
                             {timeOptions()}
                         </select>
-                        <select name="ampm" className="formAmPm" id="colorSelector" onChange={e => inputs.ampm = (e.target.value)}>
+                        <select name="ampm" className="formAmPm" id="colorSelector" onChange={e => setAmpm(e.target.value)}>
                             <option value="AM" >AM</option>
                             <option value="PM" >PM</option>
                         </select>
                 </label>
                 <label className="selectInput">
                     <span>Streak Color:</span>
-                        <select name="color" className="formText" id="colorSelector" onChange={e => inputs.color = (e.target.value)}>
+                        <select name="color" className="formText" id="colorSelector" onChange={e => setColor(e.target.value)}>
                             <option value="" >Select your option</option>
                             {colorOptions(colors)}
                         </select>

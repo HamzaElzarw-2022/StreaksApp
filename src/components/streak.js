@@ -35,7 +35,7 @@ const extendStreak = async (e) =>
 }
 const incrementCounter = async (_id, streaksDispatch) =>
 {
-    const response = await axios.put(process.env.REACT_APP_PORT + '/incrementStreak', {"id": _id})
+    const response = await axios.put(process.env.REACT_APP_PORT + '/streak/incrementStreak', {"id": _id})
 
     if(response.data.status) 
         streaksDispatch({
@@ -48,7 +48,7 @@ const incrementCounter = async (_id, streaksDispatch) =>
 }
 const checkDeadline = async (_id, streaksDispatch, expiredDispatch) =>
 {
-    const response = await axios.put(process.env.REACT_APP_PORT + '/roundEnded', {"id": _id} )
+    const response = await axios.put(process.env.REACT_APP_PORT + '/streak/roundEnded', {"id": _id} )
         
     if(response.data.status === true) {
         if(response.data.action === "active") 

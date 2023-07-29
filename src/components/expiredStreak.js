@@ -11,7 +11,7 @@ export default function NotActiveStreak({streakObject})
     
     const deleteExpiredStreak = async() => {
         if (window.confirm(`are you sure you want to delete "${streakObject.name}" streak ?`)) {
-            const response = await axios.put(process.env.REACT_APP_PORT + '/deleteStreak', {"id": streakObject._id} )
+            const response = await axios.put(process.env.REACT_APP_PORT + '/streak/deleteStreak', {"id": streakObject._id} )
             if(response.data.status === true) 
                 expiredDispatch({
                     type: 'remove',
@@ -22,7 +22,7 @@ export default function NotActiveStreak({streakObject})
         }
     }
     const retryExpiredStreak = async() => {
-        const response = await axios.put(process.env.REACT_APP_PORT + '/retryStreak', {"id": streakObject._id} )
+        const response = await axios.put(process.env.REACT_APP_PORT + '/streak/retryStreak', {"id": streakObject._id} )
         if(response.data.status) {
             streaksDispatch({
                 type: 'add',

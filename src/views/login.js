@@ -1,6 +1,36 @@
+import { useState } from "react";
 import "../styles/login.css"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+    
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("")
+    const navigate = useNavigate();
+
+    const login = async() => {
+        setMessage("")
+        try {
+            const response = await axios.post(process.env.REACT_APP_PORT + '/user/login',{
+                password: password, 
+                email: email
+            })
+            if(response.data.status) {
+                setMessage("")
+                console.log(response.data) 
+                navigate("/homepage")
+            }
+            else 
+                setMessage(response.data.message)
+            
+        } catch (error) {
+            console.log(error)
+            alert("an error has occured while logging in")
+        }
+        
+    }
 
     return(
         <div>
@@ -8,13 +38,13 @@ export default function Login() {
             <div className="loginForm">
                 
                 <label className="label">Email address</label>
-                <input className="formElement inputs" spellcheck="false"></input>
+                <input className="formElement inputs" spellCheck="false" onChange={e => setEmail(e.target.value)}></input>
                 <div className="label">Password</div>
-                <input type="password" className="formElement inputs" spellcheck="false"></input>
-                <button className="formElement loginButton">Log in</button>
+                <input type="password" className="formElement inputs" spellCheck="false" onChange={e => setPassword(e.target.value)}></input>
+                <button className="formElement loginButton" onClick={login} >Log in</button>
+                <div className="message">{message}</div>
                 <div className="remember"><input type="checkBox" className="checkbox"/> remember me</div>
-                <div className="divider"></div>
-                <div className="createAccount">first streak? <a href="">create account</a></div>
+                <div className="createAccount">first streak? <a href="/signup">create account</a></div>
             </div>
         </div>
     );

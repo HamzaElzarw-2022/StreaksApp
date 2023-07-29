@@ -24,19 +24,28 @@
 .formElement {
     margin: auto;
     display: block;
-    font-size: 25px;
-    margin-bottom: 5px;
+    font-size: 20px;
+    margin-bottom: 15px;
     caret-color: black;
     
 }
 .inputs {
     width: 370px;
     border-radius: 5px;
-    height: 50px;
+    height: 40px;
     text-align: center;
-    background-color: aliceblue;
-    border: solid #3b424b 2px;
+    background-color: #ddedff;
+    border: none;
+    box-shadow: 0px 0 4px  #cccccc;
     
+}
+.name {
+    width: 180px;
+    display: inline;
+    
+}
+.fname {
+    margin-right: 10px;
 }
 .label {
     margin: auto;
@@ -54,20 +63,44 @@
     background-color: #b4d7ff;
     border: none;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+    
+}
+.loginButton:active {
+    background-color: #83b6f0;
 }
 .remember {
     text-align: left;
     padding-left: 30px;
+    margin-top: 10px;
     
-}
-checkBox {
-    size: 20px;
 }
 .createAccount {
     width: 365px;
     margin: auto;
+    margin-top: 10px;
     padding-top: 7px;
     border-top: solid #575757 1px;
 }
-
+.divider {
+    overflow:visible;
+    position: relative;
+    left: 17.5px;
+    width: 365px;
+    height: 1px;
+    background-color: #575757;
+    border: none;
+    padding: 0px;
+}
+.password {
+    margin-top: 15px;
+}
+.age {
+    width: 100px;
+    display: inline;
+}
+.message {
+    color: red;
+    text-align: left;
+    padding-left: 20px;
+}
