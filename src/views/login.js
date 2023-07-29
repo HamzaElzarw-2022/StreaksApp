@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../styles/login.css"
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link  } from "react-router-dom";
 
 export default function Login() {
     
@@ -44,7 +44,7 @@ export default function Login() {
                 <button className="formElement loginButton" onClick={login} >Log in</button>
                 <div className="message">{message}</div>
                 <div className="remember"><input type="checkBox" className="checkbox"/> remember me</div>
-                <div className="createAccount">first streak? <a href="/signup">create account</a></div>
+                <div className="createAccount">first streak? <Link to="/signup">create account</Link></div>
             </div>
         </div>
     );

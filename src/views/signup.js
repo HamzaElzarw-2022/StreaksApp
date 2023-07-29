@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../styles/login.css"
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Signup() {
     
@@ -66,7 +66,7 @@ export default function Signup() {
                 <div className="message">{message}</div>
 
                 <div className="remember"><input type="checkBox" className="checkbox"/> remember me</div>
-                <div className="createAccount">already have an account? <a href="/">log in</a></div>
+                <div className="createAccount">already have an account? <Link to="/">log in</Link></div>
             </div>
         </div>
     );
