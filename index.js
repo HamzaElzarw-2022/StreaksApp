@@ -1,42 +1,27 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors')
 const mongoose = require('mongoose');
-const {
-  getStreaks,
-  createNewStreak,
-  incrementStreak,
-  newRound,
-  retryStreak,
-  deleteStreak
-} = require('./controllers/streakController')
 
-const port = 8080;
+const streakRouter = require('./routes/streakRoutes')
+const userRouter = require('./routes/userRoutes')
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/streak", streakRouter)
+app.use("/api/user", userRouter)
 
-mongoose.connect('mongodb://127.0.0.1:27017/mainDB')
+mongoose.connect(process.env.DB_URI)
 .then(()=>{
   console.log("connected to DB")
-  app.listen(port, () => {
-    console.log(`server is listening on port ${port}`)
+  app.listen(process.env.NODE_PORT, () => {
+    console.log(`server is listening on port ${process.env.NODE_PORT}`)
   })
 }).catch((err) => {
   console.log(err)
 })
-
-app.get('/getStreaks', getStreaks);
-
-app.put('/newStreaks', createNewStreak);
-
-app.put('/incrementStreak', incrementStreak);
-
-app.put('/roundEnded', newRound);
-
-app.put('/retryStreak', retryStreak);
-
-app.put('/deleteStreak', deleteStreak);
 
 //developemnt code
 app.options('/allowCors', () => {

@@ -1,4 +1,4 @@
-const {streak, streakObject} = require('../streak')
+const {streak, streakObject} = require('../models/streak')
 
 const getStreaks = async (req, res) => 
 {
@@ -21,17 +21,17 @@ const incrementStreak = async (req, res) =>
     if(!document) 
         return res.json({
             status: false,
-            meassage: "streak id not found"
+            message: "streak id not found"
         })
     if(!document.active)
         return res.json({
             status: false,
-            meassage: "streak is not active"
+            message: "streak is not active"
         });
     if(document.done)
         return res.json({
             status: false,
-            meassage: "streak is already done"
+            message: "streak is already done"
         });
     await streak.findByIdAndUpdate(id, {
         done: true,
@@ -39,7 +39,7 @@ const incrementStreak = async (req, res) =>
     })
     return res.json({
         status: true,
-        meassage: "success"
+        message: "success"
     });
 
 }
@@ -53,18 +53,18 @@ const newRound = async (req, res) =>
     if(!document) 
         return res.json({
             status: false,
-            meassage: "streak id not found"
+            message: "streak id not found"
         })
     if(!document.active)
         return res.json({
             status: false,
-            meassage: "streak is not active"
+            message: "an expired streak requested a new round, please refresh your page"
         });
     if(!document.done || (Date.now() - new Date(document.roundEnd)) > DAY) { //streak deadline has passed
         
         const newHighestStreak = (document.count > document.highestStreak) ? document.count : document.highestStreak;
 
-        await streak.findByIdAndUpdate(req.body.id, {
+        const expiredStreak = await streak.findByIdAndUpdate(req.body.id, {
             active: false,
             done: false,
             highestStreak: newHighestStreak
@@ -73,7 +73,8 @@ const newRound = async (req, res) =>
         return res.json({
             status: true,
             action: "expired",
-            message: "deadline has passed!!"
+            message: "deadline has passed!!",
+            streak: expiredStreak
         });
     }
 
@@ -99,12 +100,12 @@ const retryStreak = async (req, res) =>
     if(!document) 
         return res.json({
             status: false,
-            meassage: "streak id not found"
+            message: "streak id not found"
         })
     if(document.active)
         return res.json({
             status: false,
-            meassage: "streak is already active"
+            message: "streak is already active"
         });
 
     let newRoundEnd = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), updateTime)

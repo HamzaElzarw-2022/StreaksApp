@@ -7,6 +7,9 @@ class streakObject
     this.name= name;
     this.theme= theme;
 
+    const day = new Date().getHours() >= roundUpdateTime ? new Date().getDate()+1 : new Date().getDate();
+    this.roundEnd = new Date(new Date().getFullYear(), new Date().getMonth(), day, roundUpdateTime)
+
     this.count= 0;
     this.highestStreak = 0;
     this.numberOfAttempts = 1;
@@ -14,13 +17,12 @@ class streakObject
     this.done= false;
     this.active= true;
 
-    const day = new Date().getHours() >= roundUpdateTime ? new Date().getDate()+1 : new Date().getDate();
-    this.roundEnd = new Date(new Date().getFullYear(), new Date().getMonth(), day, roundUpdateTime)
+    
 
   }
 }
 
-const streakschema = new Schema({
+const streakSchema = new Schema({
 
     name: String,
     theme: Number,
@@ -34,6 +36,6 @@ const streakschema = new Schema({
 
 })
 
-const streak = model("streak", streakschema);
+const streak = model("streak", streakSchema);
 
 module.exports = {streak, streakObject};
