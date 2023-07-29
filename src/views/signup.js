@@ -56,7 +56,7 @@ export default function Signup() {
 
                 <input className="formElement inputs" spellCheck="false" onChange={e => setEmail(e.target.value)} placeholder="Email address"></input>
                 
-                <div className="divider"></div>
+                <div className="logindivider"></div>
                 
                 <input type="password" className="formElement inputs password" spellCheck="false" onChange={e => setPassword(e.target.value)} placeholder="new password"></input>
                 <input type="password" className="formElement inputs" spellCheck="false" onChange={e => setRepPassword(e.target.value)} placeholder="repeat password"></input>

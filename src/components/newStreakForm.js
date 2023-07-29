@@ -11,7 +11,7 @@ export default function NewStreakForm({hideForm}) {
     const [name, setName] = useState("");
     const [color, setColor] = useState("");
     const [roundUpdateTime, setRoundUpdateTime] = useState(-1);
-    const [ampm, setAmpm] = useState("");
+    const [ampm, setAmpm] = useState("AM");
 
     async function makeNewStreak() 
     {
@@ -24,14 +24,15 @@ export default function NewStreakForm({hideForm}) {
             alert("please enter Round start time of the streak!"); }
         else 
         {
-            if(ampm === "PM")
-                setRoundUpdateTime(roundUpdateTime + 12);
+            let updateTime = roundUpdateTime;
+            if(ampm === "PM") 
+                updateTime = updateTime + 12
             
             try {
                 const response = await axios.put(process.env.REACT_APP_PORT + '/streak/newStreaks', {
                     "name": name, 
                     "theme": color ,
-                    "roundUpdateTime": roundUpdateTime
+                    "roundUpdateTime": updateTime
                 })
                 streaksDispatch({
                     type: 'add',
