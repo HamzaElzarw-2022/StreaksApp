@@ -3,6 +3,8 @@ import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import "../styles/homePage.css";
 
+import StreaksContainer from '../components/streaksContainer';
+import ExpiredContainer from '../components/expiredContainer';
 import Streak from '../components/streak.js';
 import NotActiveStreak from '../components/expiredStreak.js';
 import toggleTriangle from '../icons/toggleTriangle.png';
@@ -17,7 +19,7 @@ import { StreaksProvider, streaksContext } from '../contexts/streaksContext.js';
 
 function formVisibility() {
     if (document.getElementById("newStreakForm").offsetHeight === 0) 
-        document.getElementById("newStreakForm").style.height = "380px";
+        document.getElementById("newStreakForm").style.height = "340px";
     
     else 
         document.getElementById("newStreakForm").style.height = "0px";
@@ -31,7 +33,7 @@ export default function HomePage() {
             <TitleBar showForm={formVisibility}/>
             <StreaksProvider>
                 <NewStreakForm hideForm={formVisibility}/>
-                <StreaksContainer/>
+                <Content />
             </StreaksProvider>
         </div>
     );
@@ -57,9 +59,9 @@ function TitleBar({showForm}) {
     );
 }
 //the container that includes all the streaks inside
-function StreaksContainer () {
+function Content () {
 
-    const {streaksDispatch, expiredDispatch, streaks, expiredStreaks} = useContext(streaksContext);
+    const {streaksDispatch, expiredDispatch} = useContext(streaksContext);
     const [initialized, setInitialized] = useState(false);
 
     const getstreaks = async () => {
@@ -81,43 +83,16 @@ function StreaksContainer () {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(()=>{ getstreaks() },[]);
-
-    function extendExpiredSection() {
-        const expiredContainer = document.getElementById("expiredContainer");
-        if(expiredContainer.offsetHeight !== 0) {
-            expiredContainer.style.height = "0px"; 
-            document.getElementById("toggleTriangle").style.transform = "rotate(0deg)"
-        }
-        else {
-            expiredContainer.style.height = (60 * expiredContainer.childElementCount) + 10 + "px";
-            document.getElementById("toggleTriangle").style.transform = "rotate(90deg)"
-
-        }
-    }
     
     return (
         <>
-        {!initialized ? <FailedToLoad reload={getstreaks}/> : 
-        <div className="content">
-            <div className="streaksContainer">
-                {streaks.map((str) => {return <Streak key={str._id} streakObject={str} />})}
-                {streaks.length === 0 ? 
-                <div className="noActiveStreaksMessage">
-                    you don't have any active streaks, 
-                    start a new streak by clicking on the button on the top right.
-                </div> : <></>}
-            </div>
-            <div className="expiredSection" id="expiredSection">
-                <div className="expiredLabel" onClick={extendExpiredSection}>
-                    <img src={toggleTriangle} className="toggleTriangle" alt="toggleTriangle" id="toggleTriangle"/>
-                    expired Streaks: 
-                </div>
-                <div className="expiredStreaksContainer" id="expiredContainer">
-                    {expiredStreaks.map((str) => {return <NotActiveStreak key={str._id} streakObject={str} />})}
-                    {expiredStreaks.length === 0 ? <div className="noExpiredStreaksMessage">you don't have any expired streaks 💪</div> : <></>}
-                </div>
-            </div>
-        </div>}
+        <div className="content">{!initialized ? 
+            <FailedToLoad reload={getstreaks}/> : 
+                <><StreaksContainer />
+                <ExpiredContainer /></>
+                
+            
+        }</div>
         </>
         
     );
