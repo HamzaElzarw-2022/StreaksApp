@@ -1,16 +1,25 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "../styles/login.css"
 import axios from "axios";
-import { useNavigate, Link  } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { userContext } from "../contexts/userContext";
 
 export default function Login() {
     
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("")
-    const navigate = useNavigate();
+    const [message, setMessage] = useState("");
+    const {user, userDispatch} = useContext(userContext);
+    const navigate = useNavigate()
+    useEffect(()=> {
+        if(user)
+            navigate("/homepage")
+
+    }, [user])
+    
 
     const login = async() => {
+        
         setMessage("")
         try {
             const response = await axios.post(process.env.REACT_APP_PORT + '/user/login',{
@@ -18,9 +27,14 @@ export default function Login() {
                 email: email
             })
             if(response.data.status) {
+
                 setMessage("")
-                console.log(response.data) 
-                navigate("/homepage")
+                userDispatch({
+                    type: "login",
+                    user: response.data
+                })
+                localStorage.setItem("user", JSON.stringify(response.data))
+                
             }
             else 
                 setMessage(response.data.message)

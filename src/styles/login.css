@@ -3,8 +3,6 @@
     padding-top: 100px;
     font-size: 40px;
     color:aliceblue;
-    /* width: 190px;
-    margin: auto; */
     padding-bottom: 15px;
     text-align: center;
     padding-right: 14px;
@@ -19,7 +17,7 @@
     box-shadow: 0px 0 4px  #787878;
     text-align: center;
     justify-content: center;
-
+    
 }
 .formElement {
     margin: auto;

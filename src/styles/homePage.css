@@ -1,11 +1,11 @@
 html,body { 
-    height:100%; 
-    min-width: 600px;
+    height: 100vh; 
+    
 }
 
 #root {
     caret-color: transparent;
-    height:100%; 
+    height: 100vh; 
     background-color: #010409;
     width: auto;
 }
@@ -15,20 +15,24 @@ html,body {
     position: fixed;
     width: 100%;
     height: 72px;
-    display:flex;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
 }
-.title {
-    margin-left: 5%;
-    margin-top:10px;
+.hamburgerMenu {
+    margin-left: 25px;
+    width: 40px;
+}
+.logo {
+    margin-left: 15px;
     font-size: 28px;
-    flex:1;
+    flex-grow: 1;
 }
 .newStreakButton {
-    flex:1;
-    max-width: 200px;
-    max-height: 50px;
-    margin-top: 11px;
-    margin-right: 60px;
+    margin-right: 63px;
+    width: 200px;
+    height: 50px;
     background-color: #3d434a;
     border: none;
     border-radius: 30px;
@@ -69,8 +73,8 @@ html,body {
     height: 0px;
     position: fixed;
     z-index: 1; 
-    top: 82px;
-    right: 10px;
+    top: 87px;
+    right: 15px;
     border-radius: 10px;
     caret-color: auto;
     font-size: 20px;
@@ -98,7 +102,7 @@ html,body {
 }
 .formButton {
     position: relative;
-    margin:25% 15%;
+    margin:25px 15%;
     width: 70%;
     height: 35px;
     background-color: #3d434a;

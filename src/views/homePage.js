@@ -1,21 +1,16 @@
 
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "../styles/homePage.css";
+import hamburgerMune from "../icons/HamburgerMenu.svg"
 
 import StreaksContainer from '../components/streaksContainer';
 import ExpiredContainer from '../components/expiredContainer';
-import Streak from '../components/streak.js';
-import NotActiveStreak from '../components/expiredStreak.js';
-import toggleTriangle from '../icons/toggleTriangle.png';
 import NewStreakForm from '../components/newStreakForm.js';
+import { userContext } from '../contexts/userContext';
 import { StreaksProvider, streaksContext } from '../contexts/streaksContext.js';
-//TODO
-//fix the scroll and done button problem
-//start working with DB
-//add restart and delete buttons to streaks
-//work on the login feature
-//drag and drop
+
 
 function formVisibility() {
     if (document.getElementById("newStreakForm").offsetHeight === 0) 
@@ -27,6 +22,15 @@ function formVisibility() {
 
 //main component that contain all components
 export default function HomePage() {
+
+    const {user} = useContext(userContext);
+
+    const navigate = useNavigate()
+    useEffect(()=> {
+        if(!user)
+            navigate("/login")
+    }, [user])
+
     
     return (
         <div>
@@ -53,7 +57,8 @@ function FailedToLoad({reload}) {
 function TitleBar({showForm}) {
     return (
         <div className= "titleDiv">
-            <span className="title">🔥Streaks</span> 
+            <img className="hamburgerMenu" src={hamburgerMune} alt="menu" />
+            <div className="logo">🔥Streaks</div> 
             <button className="newStreakButton" type="button" onClick={showForm}>➕New Streak</button>
         </div>
     );
