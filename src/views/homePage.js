@@ -68,11 +68,14 @@ function Content () {
 
     const {streaksDispatch, expiredDispatch} = useContext(streaksContext);
     const [initialized, setInitialized] = useState(false);
+    const {user} = useContext(userContext)
 
     const getstreaks = async () => {
         try {
             if(!initialized) {
-                const response = await axios.get(process.env.REACT_APP_PORT + '/streak/getStreaks')
+                const response = await axios.get(process.env.REACT_APP_PORT + '/streak/getStreaks',{
+                    headers: { Authorization: `Bearer ${user.token}` }
+                })
                 console.log(response);
 
                 response.data.map((streak) => {

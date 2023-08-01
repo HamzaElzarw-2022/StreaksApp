@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import {colors} from "./newStreakForm";
 import axios from 'axios';
 import { streaksContext } from '../contexts/streaksContext';
+import { userContext } from '../contexts/userContext';
 
 const SECOND = 1000;
 const MINUTE = SECOND * 60;
@@ -33,9 +34,12 @@ const extendStreak = async (e) =>
         }
     }
 }
-const incrementCounter = async (_id, streaksDispatch) =>
+const incrementCounter = async (_id, streaksDispatch, token) =>
 {
-    const response = await axios.put(process.env.REACT_APP_PORT + '/streak/incrementStreak', {"id": _id})
+    const response = await axios.put(process.env.REACT_APP_PORT + '/streak/incrementStreak', 
+        { "id": _id },
+        { headers: { Authorization: `Bearer ${token}`} }
+    )
 
     if(response.data.status) 
         streaksDispatch({
@@ -46,9 +50,12 @@ const incrementCounter = async (_id, streaksDispatch) =>
         alert(response.data.message)
     
 }
-const checkDeadline = async (_id, streaksDispatch, expiredDispatch) =>
+const checkDeadline = async (_id, streaksDispatch, expiredDispatch, token) =>
 {
-    const response = await axios.put(process.env.REACT_APP_PORT + '/streak/roundEnded', {"id": _id} )
+    const response = await axios.put(process.env.REACT_APP_PORT + '/streak/roundEnded', 
+        { "id": _id },
+        { headers: { Authorization: `Bearer ${token}`} }
+    )
         
     if(response.data.status === true) {
         if(response.data.action === "active") 
@@ -87,6 +94,7 @@ export default function Streak({streakObject})
     const hours = Math.floor((timespan / HOUR) % 24);
     const minutes = Math.floor((timespan / MINUTE) % 60);
     const seconds = Math.floor((timespan / SECOND) % 60);
+    const {user} = useContext(userContext);
 
     //change remaining time every second
     useEffect(() => 
@@ -95,12 +103,12 @@ export default function Streak({streakObject})
 
             const newTimeSpan = _timespan - SECOND;
             if(newTimeSpan <= 0 && streakObject.active) 
-                checkDeadline(streakObject._id, streaksDispatch, expiredDispatch)
+                checkDeadline(streakObject._id, streaksDispatch, expiredDispatch, user.token)
             return newTimeSpan;
         })}, SECOND);
         return () => {clearInterval(intervalId)};
 
-    }, [expiredDispatch, streaksDispatch, streakObject]);
+    }, [expiredDispatch, streaksDispatch, streakObject, user.token]);
 
     //change remaining time if deadline change
     useEffect(() => 
@@ -129,7 +137,7 @@ export default function Streak({streakObject})
                 <button disabled 
                     className="incrementButton" 
                     type="button"  
-                    onClick={() => incrementCounter(streakObject._id, streaksDispatch)} 
+                    onClick={() => incrementCounter(streakObject._id, streaksDispatch, user.token)} 
                     style={{background: colorPalette.fontColor, color: colorPalette.mainColor}}>
                     <RemainingTime />
                 </button>
@@ -143,7 +151,7 @@ export default function Streak({streakObject})
             <button 
                 className="incrementButton" 
                 type="button"  
-                onClick={() => incrementCounter(streakObject._id, streaksDispatch)}
+                onClick={() => incrementCounter(streakObject._id, streaksDispatch, user.token)}
                 style={{background: colorPalette.fontColor, color: colorPalette.mainColor}}>
                 Done
             </button>

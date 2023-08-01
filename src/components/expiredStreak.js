@@ -3,15 +3,19 @@ import axios from 'axios';
 import retryIcon from '../icons/retry.png'
 import deleteIcon from '../icons/delete.png'
 import { streaksContext } from '../contexts/streaksContext';
+import { userContext } from '../contexts/userContext';
 
 export default function NotActiveStreak({streakObject}) 
 {
     const {streaksDispatch, expiredDispatch} = useContext(streaksContext)
     const [isHover, setIsHover] = useState(false);
+    const {user} = useContext(userContext);
     
     const deleteExpiredStreak = async() => {
         if (window.confirm(`are you sure you want to delete "${streakObject.name}" streak ?`)) {
-            const response = await axios.put(process.env.REACT_APP_PORT + '/streak/deleteStreak', {"id": streakObject._id} )
+            const response = await axios.put(process.env.REACT_APP_PORT + '/streak/deleteStreak', {"id": streakObject._id}, {
+                headers: { Authorization: `Bearer ${user.token}` }
+            })
             if(response.data.status === true) 
                 expiredDispatch({
                     type: 'remove',
@@ -22,7 +26,9 @@ export default function NotActiveStreak({streakObject})
         }
     }
     const retryExpiredStreak = async() => {
-        const response = await axios.put(process.env.REACT_APP_PORT + '/streak/retryStreak', {"id": streakObject._id} )
+        const response = await axios.put(process.env.REACT_APP_PORT + '/streak/retryStreak', {"id": streakObject._id}, {
+            headers: { Authorization: `Bearer ${user.token}` }
+        } )
         if(response.data.status) {
             streaksDispatch({
                 type: 'add',

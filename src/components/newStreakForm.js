@@ -1,12 +1,14 @@
 import { useState, useContext } from 'react';
 import { streaksContext } from '../contexts/streaksContext';
 import axios from 'axios';
+import { userContext } from '../contexts/userContext';
 
 
 //the form that takes input from user in order to create a new streak
 export default function NewStreakForm({hideForm}) {
 
     const { streaksDispatch } = useContext(streaksContext)
+    const {user} = useContext(userContext)
     // const [inputs] = useState({name:"", color:"", roundUpdateTime: -1, ampm:""});
     const [name, setName] = useState("");
     const [color, setColor] = useState("");
@@ -33,11 +35,14 @@ export default function NewStreakForm({hideForm}) {
                     "name": name, 
                     "theme": color ,
                     "roundUpdateTime": updateTime
+                },{
+                    headers: { Authorization: `Bearer ${user.token}` }
                 })
-                streaksDispatch({
-                    type: 'add',
-                    streak: response.data
-                })
+                if(response.status) 
+                    streaksDispatch({
+                        type: 'add',
+                        streak: response.data.streak
+                    })
             } catch (error) {console.log(error)} 
 
             hideForm();
