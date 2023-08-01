@@ -2,15 +2,18 @@ const {streak, streakObject} = require('../models/streak')
 
 const getStreaks = async (req, res) => 
 {
-    const streaks = await streak.find({});
+    const streaks = await streak.find({user_id: req.user_id}); 
     res.status(200).json(streaks);
 } 
 
 //TODO add try catch and change res.json according to error
 const createNewStreak = async (req, res) => 
 {
-    const newStreak = await streak.create(new streakObject(req.body.name, req.body.theme, req.body.roundUpdateTime));
-    res.json(newStreak);
+    const newStreak = await streak.create(new streakObject(req.body.name, req.body.theme, req.body.roundUpdateTime, req.user_id));
+    res.json({
+        status: true,
+        streak: newStreak
+    });
 }
 
 const incrementStreak = async (req, res) => 
@@ -22,6 +25,11 @@ const incrementStreak = async (req, res) =>
         return res.json({
             status: false,
             message: "streak id not found"
+        })
+    if(!document.user_id.equals(req.user_id)) 
+        return res.json({
+            status: false,
+            message: "not authorized to update this streak"
         })
     if(!document.active)
         return res.json({
@@ -54,6 +62,11 @@ const newRound = async (req, res) =>
         return res.json({
             status: false,
             message: "streak id not found"
+        })
+    if(!document.user_id.equals(req.user_id)) 
+        return res.json({
+            status: false,
+            message: "not authorized to update this streak"
         })
     if(!document.active)
         return res.json({
@@ -102,6 +115,11 @@ const retryStreak = async (req, res) =>
             status: false,
             message: "streak id not found"
         })
+    if(!document.user_id.equals(req.user_id)) 
+        return res.json({
+            status: false,
+            message: "not authorized to update this streak"
+        })
     if(document.active)
         return res.json({
             status: false,
@@ -127,14 +145,21 @@ const retryStreak = async (req, res) =>
 
 const deleteStreak = async (req, res) => 
 {
-    const deletedStreak = await streak.findByIdAndDelete(req.body.id);
-
-    if(!deletedStreak)
+    const id = req.body.id;
+    const document = await streak.findById(id);
+    
+    if(!document)
         return res.json({
             status: false,
             message: "streak not found"
         })
+    if(!document.user_id.equals(req.user_id)) 
+        return res.json({
+            status: false,
+            message: "not authorized to update this streak"
+        })
     
+    await streak.findByIdAndDelete(id);
     return res.json({
         status: true,
         message: "streak was deleted"

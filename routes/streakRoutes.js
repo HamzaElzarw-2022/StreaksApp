@@ -1,4 +1,5 @@
 const express = require('express');
+const authorization = require('../middleware/authorization')
 const {
     getStreaks,
     createNewStreak,
@@ -9,6 +10,8 @@ const {
 } = require('../controllers/streakController')
   
 const router = express.Router();
+
+router.use(authorization)
 
 router.get('/getStreaks', getStreaks);
 

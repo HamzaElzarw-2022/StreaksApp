@@ -1,4 +1,4 @@
-const {User} = require('../models/user')
+const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
 const createToken = async (_id) => {
@@ -7,7 +7,6 @@ const createToken = async (_id) => {
 
 const login = async (req, res) => {
     const {email, password} = req.body;
-    console.log("signup recieved")
 
     try {
 
@@ -27,12 +26,12 @@ const login = async (req, res) => {
         })
     }
 
-
 }
 
 const signUp = async (req, res) => {
+    
     const {email, password, fname, lname} = req.body;
-    console.log("signup recieved")
+
     try {
 
         const user = await User.signUp(email, password, fname, lname)

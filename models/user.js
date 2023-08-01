@@ -46,7 +46,6 @@ userSchema.statics.signUp = async function(email, password, fname, lname) {
         fname: fname,
         lname: lname,
     })
-
     return newUser;
 }
 userSchema.statics.login = async function(email, password) {
@@ -66,4 +65,4 @@ userSchema.statics.login = async function(email, password) {
 }
 
 const User = model("user", userSchema);
-module.exports = {User};
+module.exports = User;
