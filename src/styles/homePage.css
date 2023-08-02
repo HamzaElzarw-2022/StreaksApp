@@ -25,10 +25,15 @@ html,body {
     width: 40px;
 }
 .logo {
-    margin-left: 15px;
+    margin-left: 20px;
+    width: 40px;
+}
+.title {
+    margin-left: 5px;
     font-size: 28px;
     flex-grow: 1;
 }
+
 .newStreakButton {
     margin-right: 63px;
     width: 200px;
@@ -65,6 +70,43 @@ html,body {
     border-radius: 30px;
     color: aliceblue;
     font-size: 18px;
+}
+.menu {
+    background-color: #21262c;
+    position: fixed;
+    z-index: 1;
+    top: 87px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px;
+    align-items: center;
+    font-size: 18px;
+    transition: left 0.5s;
+    
+}
+.menuElement {
+    text-align: center;
+    padding: 5px 0px;
+}
+.menudivider {
+    width: 250px;
+    height: 1px;
+    border-bottom: solid #3d434a 1px;
+}
+.email {
+    color: rgb(119, 192, 255);
+}
+.logout {
+    color: rgb(255, 60, 60);
+    background-color: #21262c;
+    width: 100%;
+    border: none;
+
+}
+.logout:hover {
+    background-color: #3d434a;
 }
 .newStreakForm {
     color: white;

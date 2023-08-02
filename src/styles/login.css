@@ -1,11 +1,19 @@
 
 .head {
     padding-top: 100px;
+    margin: auto;
+    width: max-content;
     font-size: 40px;
     color:aliceblue;
     padding-bottom: 15px;
     text-align: center;
-    padding-right: 14px;
+    
+    display: flex;
+    align-items: center;
+}
+.loginLogo {
+    width: 50px;
+    height: 50px;
 }
 .loginForm {
     background-color: #21262c;
@@ -19,6 +27,7 @@
     justify-content: center;
     
 }
+
 .formElement {
     margin: auto;
     display: block;

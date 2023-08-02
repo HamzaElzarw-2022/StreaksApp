@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "../styles/homePage.css";
 import hamburgerMune from "../icons/HamburgerMenu.svg"
+import fireIcon from "../icons/fire.png"
 
 import StreaksContainer from '../components/streaksContainer';
 import ExpiredContainer from '../components/expiredContainer';
 import NewStreakForm from '../components/newStreakForm.js';
+import Menu from '../components/menu';
 import { userContext } from '../contexts/userContext';
 import { StreaksProvider, streaksContext } from '../contexts/streaksContext.js';
 
@@ -24,41 +26,37 @@ function formVisibility() {
 export default function HomePage() {
 
     const {user} = useContext(userContext);
+    const [menuVisible, setMenuVisible] = useState(false)
 
     const navigate = useNavigate()
     useEffect(()=> {
         if(!user)
             navigate("/login")
-    }, [user])
+    }, [navigate, user])
 
     
     return (
         <div>
-            <TitleBar showForm={formVisibility}/>
+            <TitleBar showForm={formVisibility} setMenuVisible={setMenuVisible} menuVisible={menuVisible}/>
             <StreaksProvider>
                 <NewStreakForm hideForm={formVisibility}/>
+                <Menu menuVisible={menuVisible}/>
                 <Content />
             </StreaksProvider>
         </div>
     );
 }
-//component appear if couldn't load old streaks from server
-function FailedToLoad({reload}) {
-    return(
-        <div className="failedContainer">
-            <div className="failedToLoad">
-                Failed to connect to server !! 
-                <button className="reloadStreakbtn" onClick={reload}> try again</button>
-            </div> 
-        </div> 
-    );
-}
 //the bar at the top of the website
-function TitleBar({showForm}) {
+function TitleBar({showForm, setMenuVisible, menuVisible}) {
+
+    function changeMenuVisibility() {
+        menuVisible ? setMenuVisible(false) : setMenuVisible(true);
+    }
     return (
         <div className= "titleDiv">
-            <img className="hamburgerMenu" src={hamburgerMune} alt="menu" />
-            <div className="logo">🔥Streaks</div> 
+            <img className="hamburgerMenu" src={hamburgerMune} alt="menu" onClick={changeMenuVisibility}/>
+            <img className="logo" src={fireIcon} alt="logo" />
+            <div className="title">Streaks</div> 
             <button className="newStreakButton" type="button" onClick={showForm}>➕New Streak</button>
         </div>
     );
@@ -103,6 +101,17 @@ function Content () {
         }</div>
         </>
         
+    );
+}
+//component appear if couldn't load old streaks from server
+function FailedToLoad({reload}) {
+    return(
+        <div className="failedContainer">
+            <div className="failedToLoad">
+                Failed to connect to server !! 
+                <button className="reloadStreakbtn" onClick={reload}> try again</button>
+            </div> 
+        </div> 
     );
 }
 

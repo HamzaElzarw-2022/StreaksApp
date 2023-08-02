@@ -32,7 +32,7 @@ function userReducer(user, action) {
             return action.user
         }
         case 'logout': {
-            return {status:false}
+            return null
         }
         default : {
             console.log("invalid user reducer action type was called: " + action.type)

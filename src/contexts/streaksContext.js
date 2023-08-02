@@ -52,6 +52,10 @@ function streaksReducer(streaks, action)
                 return true;
             })
         }
+        case 'logout' : 
+        {
+            return []
+        }
         default : {
             console.log("invalid streaks reducer action type was called: " + action.type)
             return streaks;
@@ -74,6 +78,10 @@ export function expiredReducer(streaks, action)
                     return false;
                 return true
             })
+        }
+        case 'logout' : 
+        {
+            return []
         }
         default : {
             console.log("invalid expired streaks reducer action type was called: " + action.type)

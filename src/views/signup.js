@@ -3,6 +3,7 @@ import "../styles/login.css"
 import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { userContext  } from "../contexts/userContext";
+import fireIcon from "../icons/fire.png"
 
 
 export default function Signup() {
@@ -60,7 +61,10 @@ export default function Signup() {
 
     return(
         <div>
-            <div className="head">🔥Streaks</div>
+            <div className="head">
+                <img className="loginLogo" src={fireIcon} alt="logo" />
+                <span>Streaks</span>
+            </div>
             <div className="loginForm">
                 <div className="formElement">Create Account</div>
                 <input className="formElement inputs name fname" spellCheck="false" onChange={e => setFname(e.target.value)} placeholder="First name"></input>

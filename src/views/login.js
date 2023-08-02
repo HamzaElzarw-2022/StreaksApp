@@ -3,6 +3,7 @@ import "../styles/login.css"
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { userContext } from "../contexts/userContext";
+import fireIcon from "../icons/fire.png"
 
 export default function Login() {
     
@@ -48,7 +49,10 @@ export default function Login() {
 
     return(
         <div>
-            <div className="head">🔥Streaks</div>
+            <div className="head">
+                <img className="loginLogo" src={fireIcon} alt="logo" />
+                <span>Streaks</span>
+            </div>
             <div className="loginForm">
                 
                 <label className="label">Email address</label>
