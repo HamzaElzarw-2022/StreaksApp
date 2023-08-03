@@ -1,3 +1,42 @@
 @media only screen and (max-width: 600px) {
-    
+    .newStreakButton {
+        display: none;
+    }
+    .homeHead {
+        margin-right: 85px;
+        justify-content: center;
+    }
+    .newStreakButtonMobile {
+        bottom: 30px;
+        right: 15px;
+        position: fixed;
+        display: inline;
+        margin-right: 10px;
+        z-index: 1;
+        background-color: #728fb1;
+        width: 200px;
+        height: 60px;
+        border: none;
+        border-radius: 30px;
+        color: aliceblue;
+        font-size: 23px;
+    }
+    .newStreakForm {
+        color: white;
+        background: #21262c;
+        width: 350px;
+        height: 0px;
+        position: fixed;
+        z-index: 1; 
+        top: 50%;
+        margin-left: -175px;
+        margin-top: -175px;
+        left: 50%;
+        border-radius: 10px;
+        caret-color: auto;
+        font-size: 20px;
+        overflow: hidden;
+        transition: height 0.5s;
+        box-shadow: 0px 0 10px  #728fb1;
+    }
 }

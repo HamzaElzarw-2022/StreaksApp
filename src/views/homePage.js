@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "../styles/homePage.css";
+import "../styles/mobile.css";
 import hamburgerMune from "../icons/HamburgerMenu.svg"
 import fireIcon from "../icons/fire.png"
 
@@ -37,17 +38,18 @@ export default function HomePage() {
     
     return (
         <div>
-            <TitleBar showForm={formVisibility} setMenuVisible={setMenuVisible} menuVisible={menuVisible}/>
+            <TitleBar formVisibility={formVisibility} setMenuVisible={setMenuVisible} menuVisible={menuVisible}/>
             <StreaksProvider>
                 <NewStreakForm hideForm={formVisibility}/>
                 <Menu menuVisible={menuVisible}/>
+                <button className="newStreakButtonMobile" type="button" onClick={formVisibility}>➕ New Streak</button>
                 <Content />
             </StreaksProvider>
         </div>
     );
 }
 //the bar at the top of the website
-function TitleBar({showForm, setMenuVisible, menuVisible}) {
+function TitleBar({formVisibility, setMenuVisible, menuVisible}) {
 
     function changeMenuVisibility() {
         menuVisible ? setMenuVisible(false) : setMenuVisible(true);
@@ -55,9 +57,11 @@ function TitleBar({showForm, setMenuVisible, menuVisible}) {
     return (
         <div className= "titleDiv">
             <img className="hamburgerMenu" src={hamburgerMune} alt="menu" onClick={changeMenuVisibility}/>
-            <img className="logo" src={fireIcon} alt="logo" />
-            <div className="title">Streaks</div> 
-            <button className="newStreakButton" type="button" onClick={showForm}>➕New Streak</button>
+            <div className="homeHead">
+                <img className="logo" src={fireIcon} alt="logo" />
+                <div className="title">Streaks</div> 
+            </div>
+            <button className="newStreakButton" type="button" onClick={formVisibility}>➕New Streak</button>
         </div>
     );
 }
