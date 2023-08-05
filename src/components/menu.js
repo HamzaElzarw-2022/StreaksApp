@@ -1,5 +1,4 @@
-import { useContext, useState } from "react"
-import { useNavigate } from 'react-router-dom';
+import { useContext} from "react"
 import { userContext } from "../contexts/userContext"
 import "../styles/switch.css";
 import { streaksContext } from "../contexts/streaksContext";
@@ -8,7 +7,6 @@ export default function Menu({menuVisible}) {
 
     const {user, userDispatch} = useContext(userContext)
     const {streaksDispatch, expiredDispatch} = useContext(streaksContext);
-    const navigate = useNavigate()
 
     function logout() {
 
@@ -26,7 +24,7 @@ export default function Menu({menuVisible}) {
     }
     
     return(
-        <div className="menu" style={menuVisible ? {left:"10px"} : {left:"-300px"}}>
+        <div className="menu" style={menuVisible ? {left:"15px"} : {left:"-300px"}}>
             <div className="menuElement email">{user ? user.email : " "}</div>
             <div className="menudivider"></div>
             {/* <div class="switch">

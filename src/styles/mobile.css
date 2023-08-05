@@ -21,22 +21,5 @@
         color: aliceblue;
         font-size: 23px;
     }
-    .newStreakForm {
-        color: white;
-        background: #21262c;
-        width: 350px;
-        height: 0px;
-        position: fixed;
-        z-index: 1; 
-        top: 50%;
-        margin-left: -175px;
-        margin-top: -175px;
-        left: 50%;
-        border-radius: 10px;
-        caret-color: auto;
-        font-size: 20px;
-        overflow: hidden;
-        transition: height 0.5s;
-        box-shadow: 0px 0 10px  #728fb1;
-    }
+
 }

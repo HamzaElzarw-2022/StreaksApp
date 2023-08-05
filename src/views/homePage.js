@@ -14,20 +14,12 @@ import Menu from '../components/menu';
 import { userContext } from '../contexts/userContext';
 import { StreaksProvider, streaksContext } from '../contexts/streaksContext.js';
 
-
-function formVisibility() {
-    if (document.getElementById("newStreakForm").offsetHeight === 0) 
-        document.getElementById("newStreakForm").style.height = "340px";
-    
-    else 
-        document.getElementById("newStreakForm").style.height = "0px";
-}
-
 //main component that contain all components
 export default function HomePage() {
 
     const {user} = useContext(userContext);
     const [menuVisible, setMenuVisible] = useState(false)
+    const [formVisible, setFormVisible] = useState(false)
 
     const navigate = useNavigate()
     useEffect(()=> {
@@ -35,33 +27,36 @@ export default function HomePage() {
             navigate("/login")
     }, [navigate, user])
 
-    
+    function menuVesibility() {
+        setMenuVisible(!menuVisible)
+    }
+    function formVesibility() {
+        setFormVisible(!formVisible)
+    }
+
     return (
         <div>
-            <TitleBar formVisibility={formVisibility} setMenuVisible={setMenuVisible} menuVisible={menuVisible}/>
+            <TitleBar formVesibility={formVesibility} menuVesibility={menuVesibility}/>
             <StreaksProvider>
-                <NewStreakForm hideForm={formVisibility}/>
+                <NewStreakForm formVesibility={formVesibility} formVisible={formVisible}/>
                 <Menu menuVisible={menuVisible}/>
-                <button className="newStreakButtonMobile" type="button" onClick={formVisibility}>➕ New Streak</button>
+                <button className="newStreakButtonMobile" type="button" onClick={formVesibility}>➕ New Streak</button>
                 <Content />
             </StreaksProvider>
         </div>
     );
 }
 //the bar at the top of the website
-function TitleBar({formVisibility, setMenuVisible, menuVisible}) {
+function TitleBar({formVesibility, menuVesibility}) {
 
-    function changeMenuVisibility() {
-        menuVisible ? setMenuVisible(false) : setMenuVisible(true);
-    }
     return (
         <div className= "titleDiv">
-            <img className="hamburgerMenu" src={hamburgerMune} alt="menu" onClick={changeMenuVisibility}/>
+            <img className="hamburgerMenu" src={hamburgerMune} alt="menu" onClick={menuVesibility}/>
             <div className="homeHead">
                 <img className="logo" src={fireIcon} alt="logo" />
                 <div className="title">Streaks</div> 
             </div>
-            <button className="newStreakButton" type="button" onClick={formVisibility}>➕New Streak</button>
+            <button className="newStreakButton" type="button" onClick={formVesibility} >➕New Streak</button>
         </div>
     );
 }

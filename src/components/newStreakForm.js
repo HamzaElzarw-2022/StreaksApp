@@ -1,23 +1,67 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { streaksContext } from '../contexts/streaksContext';
 import axios from 'axios';
 import { userContext } from '../contexts/userContext';
 
+function useFormPosition(formVisible) {
+
+    const [position, setPosition] = useState({})
+    useEffect(()=>{
+        if(window.innerWidth < 600) {
+            if(formVisible) 
+                setPosition({
+                    top: "50%",
+                    right: "50%",
+                    marginRight: "-150px",
+                    marginTop: "-175px",
+                    transition: "top 0.5s"
+                })
+            else 
+                setPosition({
+                    top: "-200px",
+                    right: "50%",
+                    marginRight: "-150px",
+                    marginTop: "-175px",
+                    transition: "top 0.5s"
+                })
+        }
+        else {
+            if(formVisible) 
+                setPosition({
+                    top: "87px",
+                    right: "15px",
+                    marginRight: "0px",
+                    marginTop: "0px",
+                    transition: "right 0.5s"
+                })
+            else 
+                setPosition({
+                    top: "87px",
+                    right: "-310px",
+                    marginRight: "0px",
+                    marginTop: "0px",
+                    transition: "right 0.5s"
+                })
+        }
+
+    }, [formVisible])
+    return [position];
+}
 
 //the form that takes input from user in order to create a new streak
-export default function NewStreakForm({hideForm}) {
+export default function NewStreakForm({formVesibility, formVisible}) {
 
     const { streaksDispatch } = useContext(streaksContext)
     const {user} = useContext(userContext)
-    // const [inputs] = useState({name:"", color:"", roundUpdateTime: -1, ampm:""});
+    const [position] = useFormPosition(formVisible)
+
     const [name, setName] = useState("");
     const [color, setColor] = useState("");
     const [roundUpdateTime, setRoundUpdateTime] = useState(-1);
     const [ampm, setAmpm] = useState("AM");
-
+    
     async function makeNewStreak() 
     {
-        
         if (name === "") {
             alert("please enter Name of the streak!"); }
         else if(color === "") {
@@ -45,7 +89,7 @@ export default function NewStreakForm({hideForm}) {
                     })
             } catch (error) {console.log(error)} 
 
-            hideForm();
+            formVesibility()
             setName('');
             setColor('');
             setRoundUpdateTime(-1);
@@ -56,7 +100,7 @@ export default function NewStreakForm({hideForm}) {
     }
 
     return (
-        <div className="newStreakForm" id="newStreakForm" >
+        <div className="newStreakForm" id="newStreakForm" style={position}>
             <form className="form">
                 <label>
                     <span>Streak Name:</span>

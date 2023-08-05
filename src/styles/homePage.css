@@ -121,17 +121,19 @@ html,body {
     color: white;
     background: #21262c;
     width: 300px;
-    height: 0px;
+    height: auto;
     position: fixed;
     z-index: 1; 
-    top: 87px;
-    right: 15px;
     border-radius: 10px;
     caret-color: auto;
     font-size: 20px;
     overflow: hidden;
-    transition: height 0.5s;
+    transition: right 0.5s;
+    transition: left 0.5s;
+    transition: top 0.5s;
+    box-shadow: 0px 0 10px  #6a6a6a;
 }
+
 .form {
     margin: auto;
     padding: 15px;
