@@ -5,7 +5,7 @@ import { userContext } from '../contexts/userContext';
 
 function useFormPosition(formVisible) {
 
-    const [position, setPosition] = useState({})
+    const [position, setPosition] = useState()
     useEffect(()=>{
         if(window.innerWidth < 600) {
             if(formVisible) 
@@ -54,6 +54,7 @@ export default function NewStreakForm({formVesibility, formVisible}) {
     const { streaksDispatch } = useContext(streaksContext)
     const {user} = useContext(userContext)
     const [position] = useFormPosition(formVisible)
+    const [loading, setLoading] = useState(false)
 
     const [name, setName] = useState("");
     const [color, setColor] = useState("");
@@ -62,6 +63,7 @@ export default function NewStreakForm({formVesibility, formVisible}) {
     
     async function makeNewStreak() 
     {
+        setLoading(true)
         if (name === "") {
             alert("please enter Name of the streak!"); }
         else if(color === "") {
@@ -97,6 +99,7 @@ export default function NewStreakForm({formVesibility, formVisible}) {
             document.getElementById("updateTextBox").value = "";
             document.getElementById("colorSelector").value = "";
         }
+        setLoading(false)
     }
 
     return (
@@ -126,7 +129,7 @@ export default function NewStreakForm({formVesibility, formVisible}) {
                             {colorOptions(colors)}
                         </select>
                 </label>
-                <button type="button" className="formButton" onClick={makeNewStreak}>make Streak</button>
+                <button type="button" className="formButton" disabled={loading} onClick={makeNewStreak}>make Streak</button>
             </form>
         </div>
     );

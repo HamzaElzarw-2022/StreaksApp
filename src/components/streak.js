@@ -13,14 +13,14 @@ let currentlyExtendedStreak = "none"; //currently extended streak
 const extendStreak = async (e) =>
 {
     if(e.target.tagName !== "BUTTON") {
-        if(e.target.offsetHeight !== 520 ) 
+        if(e.target.offsetHeight < 400 ) 
         {
             
             if(currentlyExtendedStreak !== "none") {
-                document.getElementById(currentlyExtendedStreak).style.height = "100px";
-                document.getElementById(currentlyExtendedStreak).firstChild.style.height = "100px";
+                document.getElementById(currentlyExtendedStreak).style.height = window.innerWidth<600 ? "70px" : "100px";
+                document.getElementById(currentlyExtendedStreak).firstChild.style.height = window.innerWidth<600 ? "70px" : "100px";
             }
-            e.target.style.height = "520px";
+            e.target.style.height = window.innerWidth<600 ? "400px" : "520px";
             currentlyExtendedStreak = e.target.id;
             e.target.firstChild.style.height = "0px";
             await delay(400);
@@ -28,8 +28,8 @@ const extendStreak = async (e) =>
         }
         else 
         {
-           e.target.style.height = "100px";
-           e.target.firstChild.style.height = "100px";
+           e.target.style.height = window.innerWidth<600 ? "70px" : "100px";
+           e.target.firstChild.style.height = window.innerWidth<600 ? "70px" : "100px";
            currentlyExtendedStreak = "none";
         }
     }
@@ -174,13 +174,12 @@ export default function Streak({streakObject})
             </div>
             
             <div className="extendedStreak  streakElements" id="extendedData">
-                
                 <p className="streakElements exStreakName">{streakObject.name}</p>
                 <p className="streakElements exStreakCount" >{streakObject.count}<span className="exsub">days</span></p>
                 { streakObject.done ? <DoneStreakButton /> : <NotDoneStreakButton />}
                 <div className="divider" style={{background: colorPalette.fontColor}}></div>
                 <div className="streakDetails">
-                    <div className="detailElement">Attempts: {streakObject.numberOfAttempts}</div>
+                    <div className="detailElement attemptDetail">Attempts: {streakObject.numberOfAttempts}</div>
                     <div className="detailElement highestStreakDetail">Highest Streak: {streakObject.highestStreak}</div>
                     <div className="detailElement">Update time: {
                         new Date(streakObject.roundEnd).getHours() > 12 ? 

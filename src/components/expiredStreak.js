@@ -47,8 +47,8 @@ export default function NotActiveStreak({streakObject})
     return(
         <div className="notActiveStreak" onMouseLeave={() => {setIsHover(false)}} onMouseEnter={() => {setIsHover(true)}}>
             <p className="notActiveName" >{streakObject.name}</p>
-            <p className="notActiveCounter"> highest streak: {streakObject.highestStreak} </p>
-            <p className="notActiveAttemts"> attempts: {streakObject.numberOfAttempts} </p>
+            <p className="notActiveCounter"> <span className='expiredSpan'>best:</span> {streakObject.highestStreak} </p>
+            <p className="notActiveAttemts"> <span className='expiredSpan'>attempts:</span> {streakObject.numberOfAttempts} </p>
 
             <div className="expiredOptionsDiv" style={{visibility: isHover ? 'visible' : 'hidden' }}>
                 <img src={retryIcon} onClick={retryExpiredStreak} className="retryIcon scaleBig" alt="retryIcon" id="retryIcon"/>

@@ -21,5 +21,130 @@
         color: aliceblue;
         font-size: 23px;
     }
+    .newStreakForm {
+        top: -200px;
+        right: 50%;
+        margin-right: -150px;
+        margin-top: -175px;
+    }
+    .streaksContainer {
+        width: 90%;
+    }
+    .streakDiv {
+        height: 70px;
+        padding-left: 15px;
+        padding-right: 15px;
+        border-radius: 20px;
+    }
+    .collapsedStreak {
+        height: 70px;
+    }
+    .streakCount {
+        font-size: 45px;
+        min-width: 50px;
+    }
+    .sub {
+        font-size: 8px;
+    }
+    .streakName {
+        font-size: 25px;
+    }
+    .streakState {
+        font-size: 15px;
+        max-width: 100px;
+    }
 
+    .exStreakName {
+        font-size: 40px;
+    }
+    .exStreakCount {
+        font-size: 120px;
+        margin-bottom: 10px;
+    }
+    .exsub {
+        font-size: 20px;
+    }
+    .incrementButton {
+        pointer-events: visible;
+        font-size: 20px;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 40px;
+        color: rgb(108, 153, 190);
+        width: 85%;
+        height: 55px;
+        position: relative;
+        margin: 0px 7.5% 5px 7.5%;
+    }
+    .exStreakState {
+        font-size: 15px;
+        margin-bottom: 7px;
+    }
+    .emptyExStreak {
+        height: 20px;
+    }
+    .streakDetails {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .detailElement {
+        flex-basis: 5;
+        font-size: 14px;
+    }
+    .attemptDetail {
+        max-width: 80px;
+    }
+    .highestStreakDetail {
+        min-width: 15px;
+    }
+    .divider {
+        height: 1px;
+        margin: 5px 10px;
+    }
+    .expiredSection {
+        width: 90%;
+        margin: auto;
+        max-width: 800px;
+        background-color: #111317;
+        margin-top: 20px;
+        height: auto;
+        border-radius: 10px;
+    }
+    .toggleTriangle {
+        width: 12px;
+        margin-right: 10px;
+        transition: transform 0.5s;
+    }
+    .expiredLabel {
+        font-size: 16px;
+        width: 140px;
+    }
+    .deleteIcon { 
+        height: 15px;
+    }
+    .retryIcon {
+        height: 19px;  
+        margin-top: 4px;
+        margin-right: 10px;
+    }
+    .notActiveStreak {
+        font-size: 14px;
+        padding-left: 16px;
+        
+    }
+    .expiredOptionsDiv{
+        width: 74px;
+        min-width: 60px;
+        transition: display 0.5s;
+        flex:1;
+    }
+    .notActiveName {
+        flex:4;
+    }
+    .notActiveCounter {
+        flex:2;
+    }
+    .notActiveAttemts {
+        flex:3;
+    }
 }
