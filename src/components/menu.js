@@ -1,27 +1,12 @@
 import { useContext} from "react"
 import { userContext } from "../contexts/userContext"
 import "../styles/switch.css";
-import { streaksContext } from "../contexts/streaksContext";
+import useLogout from "../hooks/useLogout";
 
 export default function Menu({menuVisible}) {
 
-    const {user, userDispatch} = useContext(userContext)
-    const {streaksDispatch, expiredDispatch} = useContext(streaksContext);
-
-    function logout() {
-
-        localStorage.removeItem('user')
-        userDispatch({
-            type: "logout"
-        })
-        streaksDispatch({
-            type: "logout"
-        })
-        expiredDispatch({
-            type: "logout"
-        })
-        // navigate("/login")
-    }
+    const {user} = useContext(userContext)
+    const {logout} = useLogout()
     
     return(
         <div className="menu" style={menuVisible ? {left:"15px"} : {left:"-300px"}}>

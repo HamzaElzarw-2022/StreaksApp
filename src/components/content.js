@@ -5,6 +5,7 @@ import ExpiredContainer from '../components/expiredContainer';
 import { userContext } from '../contexts/userContext';
 import { streaksContext } from '../contexts/streaksContext.js';
 import loadingIcon from '../icons/loadingIcon.png'
+import useLogout from '../hooks/useLogout';
 
 export default function Content() {
 
@@ -12,6 +13,7 @@ export default function Content() {
     const {user} = useContext(userContext);
     const [status, setStatus] = useState("");
     const [content, setContent] = useState(<Loading />);
+    const {logout} = useLogout();
 
     useEffect(()=> {
         switch(status) {
@@ -39,16 +41,20 @@ export default function Content() {
                 const response = await axios.get(process.env.REACT_APP_PORT + '/streak/getStreaks',{
                     headers: { Authorization: `Bearer ${user.token}` }
                 })
-                console.log(response);
-
-                response.data.map((streak) => {
+                if(response.status) {
+                    response.data.map((streak) => {
                     if(streak.active === true) 
                         streaksDispatch({ type: 'add', streak: streak })
                     else 
                         expiredDispatch({ type: 'add', streak: streak })
                     return streak;
-                })
-                setStatus("success")
+                    })
+                    setStatus("success")
+                }
+                else {
+                    logout()
+                }
+                
             }
         } catch { 
             setStatus("failure") 

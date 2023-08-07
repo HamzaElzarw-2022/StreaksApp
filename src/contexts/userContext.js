@@ -28,7 +28,6 @@ export function UserProvider({children}) {
 function userReducer(user, action) {
     switch(action.type) {
         case 'login': {
-            console.log(action.user)
             return action.user
         }
         case 'logout': {
