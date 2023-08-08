@@ -3,14 +3,14 @@ const {Schema, model} = require('mongoose');
 
 class streakObject 
 {
-  constructor(name, theme, roundUpdateTime, user_id) {
+  constructor(name, theme, roundEnd, user_id) {
 
     this.name= name;
     this.theme= theme;
     this.user_id = user_id;
 
-    const day = new Date().getHours() >= roundUpdateTime ? new Date().getDate()+1 : new Date().getDate();
-    this.roundEnd = new Date(new Date().getFullYear(), new Date().getMonth(), day, roundUpdateTime)
+    console.log(roundEnd)
+    this.roundEnd = new Date(roundEnd)
 
     this.count= 0;
     this.highestStreak = 0;

@@ -9,7 +9,7 @@ const getStreaks = async (req, res) =>
 //TODO add try catch and change res.json according to error
 const createNewStreak = async (req, res) => 
 {
-    const newStreak = await streak.create(new streakObject(req.body.name, req.body.theme, req.body.roundUpdateTime, req.user_id));
+    const newStreak = await streak.create(new streakObject(req.body.name, req.body.theme, req.body.roundEnd, req.user_id));
     res.json({
         status: true,
         streak: newStreak
