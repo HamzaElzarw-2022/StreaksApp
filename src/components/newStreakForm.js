@@ -30,14 +30,18 @@ export default function NewStreakForm({formVesibility, formVisible}) {
         else 
         {
             let updateTime = roundUpdateTime;
+            console.log(updateTime)
             if(ampm === "PM") 
                 updateTime = updateTime + 12
+            
+            const day = new Date().getHours() >= updateTime ? new Date().getDate()+1 : new Date().getDate();
+            const roundEnd = new Date(new Date().getFullYear(), new Date().getMonth(), day, updateTime)
             
             try {
                 const response = await axios.put(process.env.REACT_APP_PORT + '/streak/newStreaks', {
                     "name": name, 
-                    "theme": color ,
-                    "roundUpdateTime": updateTime
+                    "theme": color,
+                    "roundEnd": roundEnd
                 },{
                     headers: { Authorization: `Bearer ${user.token}` }
                 })
@@ -70,18 +74,18 @@ export default function NewStreakForm({formVesibility, formVisible}) {
                
                 <label className="selectInput">
                     <span>round update time:</span>
-                        <input name="time" type='number' className='formTime' id="updateTextBox" placeholder='select time' min='1' max='12' onChange={e => setRoundUpdateTime(parseInt(e.target.value))}/>
-                        <select name="ampm" className="formAmPm" id="colorSelector" onChange={e => setAmpm(e.target.value)}>
-                            <option value="AM" >AM</option>
-                            <option value="PM" >PM</option>
-                        </select>
+                    <input name="time" type='number' className='formTime' id="updateTextBox" placeholder='select time' min='1' max='12' onChange={e => setRoundUpdateTime(parseInt(e.target.value))}/>
+                    <select name="ampm" className="formAmPm" id="colorSelector" onChange={e => setAmpm(e.target.value)}>
+                        <option value="AM" >AM</option>
+                        <option value="PM" >PM</option>
+                    </select>
                 </label>
                 <label className="selectInput">
                     <span>Streak Color:</span>
-                        <select name="color" className="formText" id="colorSelector" onChange={e => setColor(e.target.value)}>
-                            <option value="" >Select your option</option>
-                            {colorOptions(colors)}
-                        </select>
+                    <select name="color" className="formText" id="colorSelector" onChange={e => setColor(e.target.value)}>
+                        <option value="" >Select your option</option>
+                        {colorOptions(colors)}
+                    </select>
                 </label>
                 <button type="submit" className="formButton" disabled={loading} >make Streak</button>
             </form>
