@@ -4,6 +4,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { userContext } from "../contexts/userContext";
 import fireIcon from "../icons/fire.png"
+import loadingIcon from '../icons/loadingIcon.png'
 
 export default function Login() {
     
@@ -11,6 +12,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const {user, userDispatch} = useContext(userContext);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
     useEffect(()=> {
         if(user)
@@ -22,6 +24,7 @@ export default function Login() {
     const login = async() => {
         
         setMessage("")
+        setLoading(true)
         try {
             const response = await axios.post(process.env.REACT_APP_PORT + '/user/login',{
                 password: password, 
@@ -44,7 +47,7 @@ export default function Login() {
             console.log(error)
             alert("an error has occured while logging in")
         }
-        
+        setLoading(false)
     }
 
     return(
@@ -59,7 +62,9 @@ export default function Login() {
                 <input className="formElement inputs" spellCheck="false" onChange={e => setEmail(e.target.value)}></input>
                 <div className="label">Password</div>
                 <input type="password" className="formElement inputs" spellCheck="false" onChange={e => setPassword(e.target.value)}></input>
-                <button className="formElement loginButton" onClick={login} >Log in</button>
+                <button className="formElement loginButton" onClick={login} disabled={loading}>
+                    {loading ? <img className="loadingIconLogin rotate" src={loadingIcon} alt="loadingIcon" /> : <>Log in</>}
+                </button>
                 <div className="message">{message}</div>
                 <div className="remember"><input type="checkBox" className="checkbox"/> remember me</div>
                 <div className="createAccount">first streak? <Link to="/signup">create account</Link></div>

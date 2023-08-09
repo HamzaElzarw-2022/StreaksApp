@@ -20,6 +20,19 @@
         border-radius: 30px;
         color: aliceblue;
         font-size: 23px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 0 10px  #6a6a6a;
+    }
+    .newStreakButtonMobile:active {
+        background-color: #56687c;
+    }
+    .plusIcon {
+        margin-top: 2px;
+        width: 25px;
+        margin-right: 5px;
+        margin-left: -4px;
     }
     .newStreakForm {
         top: -200px;

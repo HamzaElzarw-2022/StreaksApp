@@ -4,9 +4,13 @@ import axios from 'axios';
 import { streaksContext } from '../contexts/streaksContext';
 import { userContext } from '../contexts/userContext';
 import useCounter from '../hooks/useCounter';
+import loadingIcon from '../icons/loadingIcon.png'
 
-const incrementCounter = async (_id, streaksDispatch, token) =>
+
+const incrementCounter = async (_id, streaksDispatch, token, setLoading) =>
 {
+    setLoading(true)
+    console.log("yes")
     const response = await axios.put(
         process.env.REACT_APP_PORT + '/streak/incrementStreak', 
         { "id": _id },
@@ -20,11 +24,13 @@ const incrementCounter = async (_id, streaksDispatch, token) =>
         })
     else
         alert(response.data.message)
+    setLoading(false)
     
 }
 export default function Streak({streakObject, extendStreak}) 
 {   
     const {user} = useContext(userContext);
+    const [loading, setLoading] = useState(false)
     const {streaksDispatch} = useContext(streaksContext)
     const {hours, minutes, seconds} = useCounter(streakObject)
     const colorPalette = colors[streakObject.theme]
@@ -52,8 +58,6 @@ export default function Streak({streakObject, extendStreak})
             <>
                 <button disabled 
                     className="incrementButton" 
-                    type="button"  
-                    onClick={() => incrementCounter(streakObject._id, streaksDispatch, user.token)} 
                     style={{background: colorPalette.fontColor, color: colorPalette.mainColor}}>
                     <RemainingTime />
                 </button>
@@ -67,9 +71,9 @@ export default function Streak({streakObject, extendStreak})
             <button 
                 className="incrementButton" 
                 type="button"  
-                onClick={() => incrementCounter(streakObject._id, streaksDispatch, user.token)}
+                onClick={() => incrementCounter(streakObject._id, streaksDispatch, user.token, setLoading)}
                 style={{background: colorPalette.fontColor, color: colorPalette.mainColor}}>
-                Done
+                {loading ? <img className="loadingIconLogin rotate" src={loadingIcon} alt="loadingIcon" /> : <>Done</>}
             </button>
             <p className="streakElements exStreakState">
                 <RemainingTime />

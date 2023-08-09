@@ -9,6 +9,7 @@ import NewStreakForm from '../components/newStreakForm.js';
 import Menu from '../components/menu';
 import { userContext } from '../contexts/userContext';
 import { StreaksProvider} from '../contexts/streaksContext.js';
+import plusIcon from '../icons/addIcon.png'
 
 //main component that contain all components
 export default function HomePage() {
@@ -36,7 +37,7 @@ export default function HomePage() {
             <StreaksProvider>
                 <NewStreakForm formVesibility={formVesibility} formVisible={formVisible}/>
                 <Menu menuVisible={menuVisible}/>
-                <button className="newStreakButtonMobile" type="button" onClick={formVesibility}>➕ New Streak</button>
+                <button className="newStreakButtonMobile" type="button" onClick={formVesibility}><img className="plusIcon"src={plusIcon} alt="add"/>New Streak</button>
                 <Content />
             </StreaksProvider>
         </div>

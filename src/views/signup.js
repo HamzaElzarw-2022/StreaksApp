@@ -1,9 +1,10 @@
 import { useState, useContext, useEffect } from "react";
 import "../styles/login.css"
 import axios from "axios";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { userContext  } from "../contexts/userContext";
 import fireIcon from "../icons/fire.png"
+import loadingIcon from '../icons/loadingIcon.png'
 
 
 export default function Signup() {
@@ -13,8 +14,10 @@ export default function Signup() {
     const [lname, setLname] = useState("");
     const [password, setPassword] = useState("");
     const [repPassword, setRepPassword] = useState("");
+
     const [message, setMessage] = useState("")
     const {user, userDispatch } = useContext(userContext);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate()
     useEffect(()=> {
@@ -24,6 +27,7 @@ export default function Signup() {
     }, [user])
 
     const signup = async() => {
+        setLoading(true)
         setMessage("")
         try {
             if(password === repPassword) {
@@ -54,7 +58,7 @@ export default function Signup() {
             console.log(error)
             alert("an error has occured while singing up")
         }
-        
+        setLoading(false)
     }
 
     
@@ -78,7 +82,9 @@ export default function Signup() {
                 <input type="password" className="formElement inputs" spellCheck="false" onChange={e => setRepPassword(e.target.value)} placeholder="repeat password"></input>
                 
                 
-                <button className="formElement loginButton" onClick={signup} >sign up</button>
+                <button className="formElement loginButton" onClick={signup} disabled={loading}>
+                    {loading ? <img className="loadingIconLogin rotate" src={loadingIcon} alt="loadingIcon" /> : <>sign up</>}
+                </button>
                 <div className="message">{message}</div>
 
                 <div className="remember"><input type="checkBox" className="checkbox"/> remember me</div>

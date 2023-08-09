@@ -38,7 +38,7 @@ export default function StreaksContainer() {
             {streaks.length === 0 ? 
             <div className="noActiveStreaksMessage">
                 you don't have any active streaks, 
-                start a new streak by clicking on the button on the top right.
+                start a new streak by clicking on the new streak button.
             </div> : <></>}
         </div>
     )

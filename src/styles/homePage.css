@@ -17,11 +17,12 @@ html,body {
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-    box-shadow: 0px 0 10px  #6a6a6a;
+    box-shadow: 0px 1px 5px  #6a6a6a;
 }
 .hamburgerMenu {
     margin-left: 25px;
     width: 40px;
+    cursor: pointer;
 }
 .homeHead {
     flex-grow: 1;
@@ -46,6 +47,18 @@ html,body {
     border-radius: 30px;
     color: aliceblue;
     font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 2px  #bbbbbb;
+}
+.plusIcon {
+    width: 20px;
+    margin-right: 7px;
+    margin-left: -7px;
+}
+.newStreakButton:active {
+    background-color: #2e3236;
 }
 .newStreakButtonMobile {
     display: none;
@@ -151,11 +164,11 @@ html,body {
     transition: top 0.5s;
     box-shadow: 0px 0 10px  #6a6a6a;
     top: 87px;
-    right: -310px;
-    /* margin-right: -150px;
-    margin-top: -175px; */
+    right: -310px
 }
-
+.loadingIconNewStreak {
+    width: 25px;
+}
 .form {
     margin: auto;
     padding: 15px;
@@ -245,6 +258,7 @@ html,body {
     padding-right:35px;
     transition: height 0.5s;
     overflow: hidden;
+    box-shadow: 0px 0px 5px  #a1a1a1;
 }
 .noActiveStreaksMessage {
     text-align: center;

@@ -70,6 +70,9 @@
     margin-bottom: 0px;
     
 }
+.loadingIconLogin {
+    width: 37px;
+}
 .loginButton:active {
     background-color: #83b6f0;
 }

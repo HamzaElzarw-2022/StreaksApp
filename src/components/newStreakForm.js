@@ -2,7 +2,8 @@ import { useState, useContext } from 'react';
 import { streaksContext } from '../contexts/streaksContext';
 import axios from 'axios';
 import { userContext } from '../contexts/userContext';
-import useFormPosition from '../hooks/useFormPosition' 
+import useFormPosition from '../hooks/useFormPosition';
+import loadingIcon from '../icons/loadingIcon.png'
 
 //the form that takes input from user in order to create a new streak
 export default function NewStreakForm({formVesibility, formVisible}) {
@@ -54,11 +55,9 @@ export default function NewStreakForm({formVesibility, formVisible}) {
 
             formVesibility()
             setName('');
-            setColor('');
             setRoundUpdateTime(-1);
             document.getElementById("nameTextBox").value = "";
             document.getElementById("updateTextBox").value = "";
-            document.getElementById("colorSelector").value = "";
         }
         setLoading(false)
     }
@@ -83,11 +82,13 @@ export default function NewStreakForm({formVesibility, formVisible}) {
                 <label className="selectInput">
                     <span>Streak Color:</span>
                     <select name="color" className="formText" id="colorSelector" onChange={e => setColor(e.target.value)}>
-                        <option value="" >Select your option</option>
+                        <option value="" defaultChecked >Select your option</option>
                         {colorOptions(colors)}
                     </select>
                 </label>
-                <button type="submit" className="formButton" disabled={loading} >make Streak</button>
+                <button type="submit" className="formButton" disabled={loading} >
+                    {loading ? <img className="loadingIconNewStreak rotate" src={loadingIcon} alt="loadingIcon" /> : <>make Streak</>}
+                </button>
             </form>
         </div>
     );
