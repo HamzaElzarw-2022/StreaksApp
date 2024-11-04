@@ -5,8 +5,7 @@ a streak counts how many days the user was able to do a certain habit in a row,
 if the user missed a day the streak expires where the user can repeated again or delete it. 
 This project was built using the MERN Stack.
 
-you can try the app yourself through this link: https://streaksapp.onrender.com  
-this repository is the server of the application, you can find front-end at the following repo:  [streaksApp](https://github.com/HamzaElzarw-2022/StreaksApp).
+you can try the app demo through this link: https://streaksapp.onrender.com
 
 ## Screenshots
 ### Home page, expired streaks section, and new streak section:
