@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import StreaksContainer from '../components/streaksContainer';
-import ExpiredContainer from '../components/expiredContainer';
+import StreaksContainer from './streaksContainer';
+import ExpiredContainer from './expiredContainer';
 import { userContext } from '../contexts/userContext';
 import { streaksContext } from '../contexts/streaksContext.js';
 import loadingIcon from '../icons/loadingIcon.png'
